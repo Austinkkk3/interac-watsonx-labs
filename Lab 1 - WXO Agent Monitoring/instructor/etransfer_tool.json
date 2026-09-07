@@ -1,0 +1,248 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Interac e-Transfer Assistant Tool API",
+    "description": "Helper tool for an Interac e-Transfer support agent: checks sending limits, calculates fees, and estimates delivery time by account tier.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "description": "Root endpoint with API information.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tiers": {
+      "get": {
+        "summary": "Get Tiers",
+        "description": "Get all available account tiers and their e-Transfer limits/fees.",
+        "operationId": "get_tiers_tiers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/etransfer_tool": {
+      "post": {
+        "summary": "Etransfer Tool",
+        "description": "Check an Interac e-Transfer against account-tier limits, calculate the fee,\nand estimate delivery time.\n\nParameters:\n- transfer_type: \"send money\", \"request money\", or \"autodeposit\"\n- amount: transfer amount in CAD\n- account_tier: \"personal basic\", \"personal premium\", or \"small business\"\n- recipient_has_autodeposit: whether the recipient has Autodeposit enabled",
+        "operationId": "etransfer_tool_etransfer_tool_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ETransferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ETransferResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ETransferRequest": {
+        "properties": {
+          "transfer_type": {
+            "type": "string",
+            "title": "Transfer Type"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "account_tier": {
+            "type": "string",
+            "title": "Account Tier"
+          },
+          "recipient_has_autodeposit": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipient Has Autodeposit",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "transfer_type",
+          "amount",
+          "account_tier"
+        ],
+        "title": "ETransferRequest"
+      },
+      "ETransferResponse": {
+        "properties": {
+          "transfer_type": {
+            "type": "string",
+            "title": "Transfer Type"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "account_tier": {
+            "type": "string",
+            "title": "Account Tier"
+          },
+          "within_limit": {
+            "type": "boolean",
+            "title": "Within Limit"
+          },
+          "per_transaction_limit": {
+            "type": "number",
+            "title": "Per Transaction Limit"
+          },
+          "daily_limit": {
+            "type": "number",
+            "title": "Daily Limit"
+          },
+          "weekly_limit": {
+            "type": "number",
+            "title": "Weekly Limit"
+          },
+          "monthly_limit": {
+            "type": "number",
+            "title": "Monthly Limit"
+          },
+          "fee": {
+            "type": "number",
+            "title": "Fee"
+          },
+          "estimated_delivery": {
+            "type": "string",
+            "title": "Estimated Delivery"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transfer_type",
+          "amount",
+          "account_tier",
+          "within_limit",
+          "per_transaction_limit",
+          "daily_limit",
+          "weekly_limit",
+          "monthly_limit",
+          "fee",
+          "estimated_delivery",
+          "status"
+        ],
+        "title": "ETransferResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://REPLACE-WITH-YOUR-TOOL-URL",
+      "description": "Public base URL of the deployed e-Transfer tool (e.g. your ngrok or cloud URL)"
+    }
+  ]
+}
