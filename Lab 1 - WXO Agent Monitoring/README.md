@@ -69,16 +69,14 @@ This demonstrates knowledge-base integration, custom-tool integration, and agent
      ```
      This agent helps customers with Interac e-Transfer questions. It uses RAG over an e-Transfer support guide to explain how to send, request, and receive money, Autodeposit, delivery times, fees, and security best practices. It also uses a custom tool to check sending limits, calculate fees, and estimate delivery time by account tier.
      ```
-3. Click **Create**.
-
-   <img width="1000" alt="Agent created" src="images/newImage2.png">
 
 ### Part 2: Add Knowledge Base (RAG)
 
 #### 2.1 Upload the e-Transfer Guide
-1. Scroll to the **Knowledge** section → **Add Source** → **New Knowledge**.
+1. Click **Knowledge** section → **Add Source** → **New Knowledge**.
 
-   <img width="1000" alt="Add knowledge source" src="images/BAP_5_K.png">
+<img width="1475" height="816" alt="Screenshot 2026-09-08 at 9 15 13 PM" src="https://github.com/user-attachments/assets/ec2132a7-87b9-4e9a-979e-7cd0b7511586" />
+
 
 2. Select **Upload Files** → **Next**.
 
