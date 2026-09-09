@@ -136,11 +136,15 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
    ![Select Prompt](images/image18.png)
 
-4. Go back and click on the three dots on the right of **Insurance claim summarization prompt** and click **Go to AI factsheets**
+4. If the default model is not llama-3-3, go back, click **View**
+   <img width="1326" height="750" alt="16" src="https://github.com/user-attachments/assets/5364c486-1f66-4a1d-a887-f4d8af8e4d24" />
+
+
+6. Go back and click on the three dots on the right of **Insurance claim summarization prompt** and click **Go to AI factsheets**
 
    ![Go to AI Factsheets](images/image19.png)
 
-5. Scroll and see what all there in AI Factsheets, e.g. prompts, parameters
+7. Scroll and see what all there in AI Factsheets, e.g. prompts, parameters
 
    ![Review Factsheets 1](images/image20.png)
    ![Review Factsheets 1](images/image21.png)
@@ -172,23 +176,31 @@ Before deploying, customize the summarization prompt for Interac's dispute-summa
 
    ![Select Space](images/image23.png)
 
-3. Click on **New deployment**
+ 3. Click on **New deployment**
 
    ![New Deployment](images/image24.png)
+   
+4. Associate with Runtime Service if you didn't do it in the previous step
 
-4. Give it a Name and click **Create**
+<img width="1414" height="750" alt="15" src="https://github.com/user-attachments/assets/623ca0f6-e9ec-4928-89c0-606c9889d955" />
+
+   <img width="1414" height="793" alt="14" src="https://github.com/user-attachments/assets/58b2a8d6-f61e-4aaa-99fa-536ff59fd580" />
+
+
+
+5. Give it a Name and click **Create**
 
    ![Name Deployment](images/image25.png)
 
-5. Click on the deployment created
+6. Click on the deployment created
 
    ![View Deployment](images/image26.png)
 
-6. You can see endpoints that can be used to call the deployed prompt or model
+7. You can see endpoints that can be used to call the deployed prompt or model
 
    ![View Endpoints](images/image27.png)
 
-7. You can test the prompt here as well
+8. You can test the prompt here as well
 
    ![Test Prompt](images/image28.png)
 
