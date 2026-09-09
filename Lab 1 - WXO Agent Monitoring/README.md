@@ -4,7 +4,7 @@
 
 > **About the screenshots:** the images show the watsonx Orchestrate UI, which is what matters for each step. A few screenshots were captured from an earlier build, so the agent, knowledge-base, or tool name shown in an image may differ from the text — **follow the text**, not the labels in the images.
 
-> **Instructor has pre-provisioned:** the e-Transfer tool service is deployed and its URL is already set in `instructor/etransfer_tool.json`; the files below are provided to you; you have watsonx Orchestrate access. This lets the lab fit ~50 minutes.
+> **Instructor has pre-provisioned:** the files below are available to participants, and everyone has watsonx Orchestrate access. The custom tool is built **inside** watsonx Orchestrate as a no-code Agentic workflow — there is **nothing to host or deploy**.
 
 ## Table of Contents
 - [Architecture](#architecture)
@@ -13,19 +13,19 @@
 - [Step-by-Step Instructions](#step-by-step-instructions)
   - [Part 1: Create the e-Transfer Agent](#part-1-create-the-e-transfer-agent-in-watsonx-orchestrate)
   - [Part 2: Add Knowledge Base (RAG)](#part-2-add-knowledge-base-rag)
-  - [Part 3: Import the e-Transfer Tool](#part-3-import-the-e-transfer-tool)
+  - [Part 3: Build the Limits/Fees Tool (Agentic Workflow)](#part-3-build-the-limitsfees-tool-agentic-workflow)
   - [Part 4: Pre-production Agent Testing](#part-4-pre-production-agent-testing)
   - [Part 5: Production Agent Monitoring](#part-5-production-agent-monitoring)
 
 ## Architecture
 
-The agent is built in watsonx Orchestrate and combines three capabilities: (1) a **Knowledge base (RAG)** over an Interac e-Transfer support guide, so the agent can answer how-to, policy, and security questions; (2) a **custom e-Transfer tool** (an OpenAPI/FastAPI service) that checks sending limits, calculates fees, and estimates delivery time by account tier; and (3) **agent evaluation and production monitoring** via watsonx Orchestrate and watsonx.governance.
+The agent is built in watsonx Orchestrate and combines three capabilities: (1) a **Knowledge base (RAG)** over an Interac e-Transfer support guide, so the agent can answer how-to, policy, and security questions; (2) a **custom limits/fees tool built as a no-code Agentic workflow** that runs inside Orchestrate — it checks sending limits, calculates fees, and estimates delivery time by account tier (no external hosting); and (3) **agent evaluation and production monitoring** via watsonx Orchestrate and watsonx.governance.
 
 ```mermaid
 flowchart LR
     U([Customer]) -->|question| AG[e-Transfer Support Agent<br/>watsonx Orchestrate]
     AG -->|how-to / policy / security| KB[(Knowledge Base — RAG<br/>Interac e-Transfer Guide PDF)]
-    AG -->|limits / fees / delivery| TOOL[Custom e-Transfer Tool<br/>OpenAPI / FastAPI]
+    AG -->|limits / fees / delivery| TOOL[eTransfer Limits & Fees<br/>no-code Agentic workflow]
     KB -->|retrieved context| AG
     TOOL -->|limit check, fee, ETA| AG
     AG -->|answer| U
@@ -37,15 +37,17 @@ flowchart LR
 A support team wants a smarter way to handle everyday Interac e-Transfer questions from customers. This lab builds an AI-powered **e-Transfer Support Agent** that:
 
 1. **Uses RAG**: retrieves answers from an Interac e-Transfer support guide to explain how to send, request, and receive money, how Autodeposit works, delivery times, fees, and security best practices.
-2. **Adds a limits/fees tool**: a custom tool that checks whether a transfer is within the customer's account-tier limits, calculates the applicable fee, and estimates delivery time.
+2. **Adds a limits/fees tool**: a no-code Agentic workflow that checks whether a transfer is within the customer's account-tier limits, calculates the applicable fee, and estimates delivery time.
 
-This demonstrates knowledge-base integration, custom-tool integration, and agent evaluation & production monitoring.
+This demonstrates knowledge-base integration, building a tool with the **no-code Agentic workflow builder**, and agent evaluation & production monitoring.
 
 ## Pre-requisites
 
 - Access to an IBM watsonx Orchestrate instance
 - Familiarity with AI agent concepts (instructions, tools, knowledge bases)
-- Files provided in this lab folder: `Interac_eTransfer_Guide.pdf`, `instructor/etransfer_tool.json`, `etransfer-agent-test-cases.csv`
+- Files provided in this lab folder: `Interac_eTransfer_Guide.pdf`, `etransfer-agent-test-cases.csv`
+
+> No external service is required — the limits/fees tool is built inside Orchestrate in Part 3. *(An optional OpenAPI/FastAPI version of the same tool is included under `instructor/` for anyone who prefers a hosted API — not needed for this lab.)*
 
 ## Step-by-Step Instructions
 
@@ -117,31 +119,53 @@ This demonstrates knowledge-base integration, custom-tool integration, and agent
 
    <img width="1000" alt="Back to agent builder" src="images/newImage10.png">
 
-### Part 3: Import the e-Transfer Tool
+### Part 3: Build the Limits/Fees Tool (Agentic Workflow)
 
-> The tool service is already hosted and its URL is set in `instructor/etransfer_tool.json` (instructor pre-provisioned).
+Instead of hosting an external service, we build the limits/fees logic as a **no-code Agentic workflow** that runs inside watsonx Orchestrate — nothing to deploy.
 
-#### 3.1 Import Tool via UI
-1. Scroll to the **Toolset** section → **Add tool +**.
+> All limits and fees below are **illustrative sample values** for the demo (they match the table in `Interac_eTransfer_Guide.pdf`).
 
-   <img width="1346" height="816" alt="2" src="https://github.com/user-attachments/assets/f52c3f5d-9661-4559-8ae1-45c070103fd4" />
+#### 3.1 Start the workflow
+1. Go to the **Tools** tab → **Add tool +**.
 
+   <img width="1346" height="816" alt="Add a tool" src="https://github.com/user-attachments/assets/f52c3f5d-9661-4559-8ae1-45c070103fd4" />
 
-2. Select **Import** → **OpenAPI**.
+2. Under **Create**, choose **Agentic workflow** → **Start Building**.
+3. Name it `eTransfer Limits & Fees` with the description: *"Checks Interac e-Transfer sending limits, fees, and estimated delivery time by account tier."*
 
-   <img width="1346" height="816" alt="3" src="https://github.com/user-attachments/assets/f6a9e1c0-07b4-4a7b-853f-3ef05b3cd511" />
+#### 3.2 Define the inputs
+Add these input parameters (the agent fills them from the customer's question):
 
+| Input | Type | Allowed values |
+|-------|------|----------------|
+| `transfer_type` | text | send money, request money, autodeposit |
+| `amount` | number | amount in CAD |
+| `account_tier` | text | personal basic, personal premium, small business |
+| `recipient_has_autodeposit` | yes/no | optional (default no) |
 
-3. Upload `instructor/etransfer_tool.json`. Select the **Etransfer Tool** operation (`POST /etransfer_tool`) → **Add to agent**. (You don't need the `Root` or `Get Tiers` operations.)
+#### 3.3 Add the logic (decision branches)
+Using **Decision / branch** steps in the flow:
 
-   <img width="1000" alt="Select operation" src="images/newImage51.png">
+1. **Branch on `account_tier`** to set the per-transaction limit and fee:
+   - **personal basic** → limit = **3000**, fee = **0**
+   - **personal premium** → limit = **5000**, fee = **0**
+   - **small business** → limit = **25000**, fee = **1.50**
+2. If `transfer_type` = **request money**, set fee = **0** (requesting money is free).
+3. **Compare** `amount` to the limit → set `within_limit` = **Yes** if `amount ≤ limit`, else **No**.
+4. Set `estimated_delivery`:
+   - `recipient_has_autodeposit` = yes → *"Within seconds (Autodeposit)."*
+   - `transfer_type` = request money → *"Sent immediately; funds arrive after the other party approves."*
+   - otherwise → *"Typically within 30 minutes after the recipient accepts and answers the security question."*
 
-4. Verify the tool appears in the Toolset section.
+#### 3.4 Set the output
+Configure the workflow's response to return a short summary the agent can present, including: **account tier, amount, within limit (Yes/No), per-transaction limit, fee, and estimated delivery**.
 
-   <img width="1000" alt="Tool listed" src="images/newImage52.png">
-   <img width="1000" alt="Tool listed" src="images/newImage53.png">
+#### 3.5 Save and attach
+Save/publish the workflow. It now appears in the agent's **Toolset** as `eTransfer Limits & Fees`, and the agent can call it like any other tool.
 
-#### 3.2 Configure Agent Behavior
+> The exact node names in the flow builder can vary by version — use the **Decision/branch** steps for the tier logic and a final **response / set-output** step. Confirm labels in your environment.
+
+#### 3.6 Configure Agent Behavior
 Scroll to the **Behavior** section and add these instructions:
 
    <img width="1000" alt="Behavior section" src="images/newImage23.png">
@@ -153,11 +177,11 @@ You are an Interac e-Transfer support assistant. You operate exclusively within 
 For how e-Transfer works — sending, requesting, or receiving money, Autodeposit, delivery times, fees, security, or troubleshooting — retrieve answers from the eTransfer-knowledge knowledge base.
 
 2. Limits, Fees, and Delivery (Tool)
-When a customer asks whether a transfer is allowed, how much it costs, or how long it takes, use etransfer_tool with:
+When a customer asks whether a transfer is allowed, how much it costs, or how long it takes, use the "eTransfer Limits & Fees" workflow with:
 - transfer_type: "send money", "request money", or "autodeposit"
 - amount: transfer amount in CAD
 - account_tier: "personal basic", "personal premium", or "small business"
-- recipient_has_autodeposit: true or false (optional; default false)
+- recipient_has_autodeposit: yes or no (optional; default no)
 If the account tier or amount is missing, ask for it before calling the tool. Present results as a markdown table (transfer type, amount, account tier, within limit, per-transaction limit, fee, estimated delivery). If it exceeds the limit, explain and suggest splitting the transfer or a higher tier.
 
 3. Fraud Awareness
@@ -250,7 +274,7 @@ See the [watsonx Orchestrate evaluation docs](https://www.ibm.com/docs/en/watson
 
    <img width="1000" alt="Agent detail" src="images/newImage34.png">
 
-3. Click the first trace in the **Traces** list to see the full conversation. **Trace Details** lets you see the flow from **LLM decision → tool invocation → execution** and validate **knowledge/RAG** behavior — useful to confirm the agent called `etransfer_tool` with the right `account_tier` and `amount`, or retrieved the right passage from the guide.
+3. Click the first trace in the **Traces** list to see the full conversation. **Trace Details** lets you see the flow from **LLM decision → tool invocation → execution** and validate **knowledge/RAG** behavior — useful to confirm the agent called the `eTransfer Limits & Fees` workflow with the right `account_tier` and `amount`, or retrieved the right passage from the guide.
 
    <img width="1000" alt="Trace list" src="images/image25.png">
 
@@ -282,4 +306,4 @@ See the [Agent Monitoring Metrics docs](https://dataplatform.cloud.ibm.com/docs/
 
 ## Conclusion
 
-**Congratulations!** You built, deployed, and monitored an **Interac e-Transfer Support Agent** in watsonx Orchestrate — combining RAG for support knowledge with a custom limits/fees tool. The key takeaway is how to **evaluate, monitor, and govern** an AI agent in production so it operates reliably, transparently, and in line with business goals.
+**Congratulations!** You built, deployed, and monitored an **Interac e-Transfer Support Agent** in watsonx Orchestrate — combining RAG for support knowledge with a limits/fees tool built using the no-code Agentic workflow builder. The key takeaway is how to **evaluate, monitor, and govern** an AI agent in production so it operates reliably, transparently, and in line with business goals.
