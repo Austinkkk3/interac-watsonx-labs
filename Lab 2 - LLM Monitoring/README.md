@@ -1,17 +1,28 @@
-# Watsonx.governance Lab Guide
+# Lab 2: Interac e-Transfer Dispute Summarization with watsonx.governance (~45 min)
 
 > **Interac watsonx Enablement Workshop.** Scenarios, personas, and data in this lab are fictional and for demonstration only.
+
+## Use Case: Interac e-Transfer Dispute Summarization
+
+Interac support teams receive large volumes of customer dispute and complaint narratives about e-Transfer (wrong recipient, suspected fraud, declined transfers, duplicate sends, and so on). In this lab you govern and evaluate a **text-summarization prompt** that condenses these dispute narratives into short, consistent summaries — the kind of GenAI assist a support team would put into production.
+
+The lab uses IBM's **"Getting started with watsonx governance"** sample project as the starting point. It ships a summarization prompt (named *Insurance claim summarization* in the sample). You will **adapt that prompt to Interac's dispute-summarization use case** and evaluate it against Interac e-Transfer dispute data. The governance workflow — deploy, evaluate (ROUGE, BLEU), model health, and AI Factsheets — is identical regardless of the domain.
+
+> **Note on names:** because we import IBM's sample project unchanged (so it imports cleanly), some assets and screenshots still show their original sample names (e.g. *Insurance claim summarization*). Follow the steps — you will customize the prompt content for Interac.
 
 
 ## Table of Contents
 
 1. [What is Watsonx.governance](#what-is-watsonxgovernance)
-2. [Model lifecycle management with Watsonx.governance (overview)](#model-lifecycle-management-with-watsonxgovernance-overview)
-3. [Terminologies related to Watsonx.governance](#terminologies-related-to-watsonxgovernance)
-4. [Project creation](#project-creation)
-5. [Deployment space creation](#deployment-space-creation)
-6. [Prompt evaluations](#prompt-evaluations)
-7. [Prompt updates in AI factsheets](#prompt-updates-in-ai-factsheets)
+2. [Terminologies](#terminologies)
+3. [Getting Started](#getting-started)
+4. [Create Project](#create-project)
+5. [Create Deployment Space](#create-deployment-space)
+6. [Track Assets](#track-assets)
+7. [Adapt the Prompt for Interac](#adapt-the-prompt-for-interac)
+8. [Deploy Prompt](#deploy-prompt)
+9. [Prompt Evaluations](#prompt-evaluations)
+10. [Model Health and AI Factsheets](#model-health-and-ai-factsheets)
 
 ---
 
@@ -136,6 +147,21 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
 ---
 
+## Adapt the Prompt for Interac
+
+Before deploying, customize the summarization prompt for Interac's dispute-summarization use case.
+
+1. In the project **Assets** tab, open the summarization prompt (shown as *Insurance claim summarization*) and click **Edit**.
+
+2. Replace the **instruction** with the Interac version:
+   ```
+   You are an Interac customer support analyst. Summarize the following Interac e-Transfer customer dispute. Focus on what happened, the amount involved, and the customer's requested resolution. Make the summary at least 3 sentences long.
+   ```
+
+3. Optionally paste one of the dispute cases from `etransfer_dispute_validation.csv` as the input to test the prompt, then click **Save**.
+
+---
+
 ## Deploy Prompt
 
 1. Go back to **Auto Claim Summary** project. Click three dots next to summarization prompt and click **Promote to space**
@@ -178,11 +204,11 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
    ![Continue](images/image30.png)
 
-3. Click **Browse** and select `claim_summarization_validation.csv` file provided
+3. Click **Browse** and select the `etransfer_dispute_validation.csv` file provided
 
     ![Upload File](images/image31.png)
 
-4. For Input select **Insurance_Claim** and for Reference output select **Summary**
+4. For Input select **Dispute_Case** and for Reference output select **Summary**
 
     ![Configure I/O](images/image32.png)
 
@@ -217,13 +243,11 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
 ## Model Health and AI Factsheets
 
-1. Now scroll back up and go to **Model health** tab and scroll down and click on **Throughput and Latency (API)**. This shows the quality of service
+1. *(Optional)* Go to the **Model health** tab and open **Throughput and Latency (API)** to see quality-of-service metrics for the deployed prompt.
 
     ![Model Health Tab](images/image41.png)
 
-    ![Throughput and Latency](images/image42.png)
-
-2. Now click on the **AI Factsheet** tab. You should be able to see all the updates like deployed endpoints and evaluations in the factsheet;.
+2. Now click on the **AI Factsheet** tab. You should be able to see all the updates like deployed endpoints and evaluations in the factsheet — this is the governance payoff: everything that happened to the prompt (deployment, evaluations) is captured in one place for explainability and audit.
 
     ![AI Factsheet Tab](images/image43.png)
 
