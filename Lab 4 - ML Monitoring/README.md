@@ -19,7 +19,7 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
 
 ## Prerequisites
 
-- A watsonx / Cloud Pak for Data environment with access to **Projects**, **Deployment spaces**, and **Watson OpenScale**.
+- A watsonx environment with access to **Projects**, **Deployment spaces**, and **Watson OpenScale**.
 - Files from this repo: `demand_forecasting.ipynb`, `training_data_v2.csv`, `test_data.csv`.
 - An IBM Cloud **API key** (Manage → Access (IAM) → API keys → Create):
 
