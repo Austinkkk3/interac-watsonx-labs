@@ -131,37 +131,79 @@ Instead of hosting an external service, we build the limits/fees logic as a **no
    <img width="1346" height="816" alt="Add a tool" src="https://github.com/user-attachments/assets/f52c3f5d-9661-4559-8ae1-45c070103fd4" />
 
 2. Under **Create**, choose **Agentic workflow** → **Start Building**.
+   <img width="1346" height="816" alt="Screenshot 2026-09-08 at 10 10 59 PM" src="https://github.com/user-attachments/assets/8c43827e-e552-4e47-a597-9e3b8923b015" />
+
 3. Name it `eTransfer Limits & Fees` with the description: *"Checks Interac e-Transfer sending limits, fees, and estimated delivery time by account tier."*
 
 #### 3.2 Define the inputs
-Add these input parameters (the agent fills them from the customer's question):
+Click **0 inputs** at the top of the flow, then click **Add** for each parameter (the agent fills these from the customer's question):
+<img width="1423" height="816" alt="4" src="https://github.com/user-attachments/assets/1d0f82d8-3e43-4ae7-a0ee-2474eceddc02" />
 
-| Input | Type | Allowed values |
-|-------|------|----------------|
-| `transfer_type` | text | send money, request money, autodeposit |
-| `amount` | number | amount in CAD |
-| `account_tier` | text | personal basic, personal premium, small business |
-| `recipient_has_autodeposit` | yes/no | optional (default no) |
+| Input | Type |
+|-------|------|
+| `transfer_type` | String |
+| `amount` | Decimal |
+| `account_tier` | String |
+| `recipient_has_autodeposit` | Boolean |
 
-#### 3.3 Add the logic (decision branches)
-Using **Decision / branch** steps in the flow:
+> If the canvas started with a **Text extractor** node, delete it (we don't process documents) — select it and click the trash icon.
 
-1. **Branch on `account_tier`** to set the per-transaction limit and fee:
-   - **personal basic** → limit = **3000**, fee = **0**
-   - **personal premium** → limit = **5000**, fee = **0**
-   - **small business** → limit = **25000**, fee = **1.50**
-2. If `transfer_type` = **request money**, set fee = **0** (requesting money is free).
-3. **Compare** `amount` to the limit → set `within_limit` = **Yes** if `amount ≤ limit`, else **No**.
-4. Set `estimated_delivery`:
-   - `recipient_has_autodeposit` = yes → *"Within seconds (Autodeposit)."*
-   - `transfer_type` = request money → *"Sent immediately; funds arrive after the other party approves."*
-   - otherwise → *"Typically within 30 minutes after the recipient accepts and answers the security question."*
+#### 3.3 Add the logic (Logic block)
+From **Flow nodes → Logic block**, drop a **Logic block** between the start and end. Click **Open code editor** and paste:
 
-#### 3.4 Set the output
-Configure the workflow's response to return a short summary the agent can present, including: **account tier, amount, within limit (Yes/No), per-transaction limit, fee, and estimated delivery**.
+<img width="1423" height="816" alt="5" src="https://github.com/user-attachments/assets/bb98731c-ceb5-4351-bfa6-b6faa574e48f" />
 
-#### 3.5 Save and attach
-Save/publish the workflow. It now appears in the agent's **Toolset** as `eTransfer Limits & Fees`, and the agent can call it like any other tool.
+```python
+# eTransfer limits / fees / delivery — illustrative sample values
+tiers = {
+    "personal basic":   {"limit": 3000,  "fee": 0.00},
+    "personal premium": {"limit": 5000,  "fee": 0.00},
+    "small business":   {"limit": 25000, "fee": 1.50},
+}
+
+tier = (account_tier or "").strip().lower()
+info = tiers.get(tier, {"limit": 0, "fee": 0.00})
+per_transaction_limit = info["limit"]
+
+# Requesting money is always free; otherwise use the tier's send fee
+ttype = (transfer_type or "").strip().lower()
+fee = 0.00 if ttype == "request money" else info["fee"]
+
+# Is the transfer within the per-transaction limit?
+within_limit = amount <= per_transaction_limit
+
+# Estimated delivery
+if recipient_has_autodeposit:
+    estimated_delivery = "Within seconds (Autodeposit)."
+elif ttype == "request money":
+    estimated_delivery = "Sent immediately; funds arrive after the other party approves."
+else:
+    estimated_delivery = "Typically within 30 minutes after the recipient accepts and answers the security question."
+
+return {
+    "within_limit": within_limit,
+    "per_transaction_limit": per_transaction_limit,
+    "fee": fee,
+    "estimated_delivery": estimated_delivery,
+}
+```
+
+#### 3.4 Define the outputs
+In the Logic block's **Outputs** tab, add these outputs — the names must match the keys in the code above:
+
+<img width="1320" height="816" alt="6" src="https://github.com/user-attachments/assets/89fb0036-6d7f-44ec-ab8e-1d1df523dbcf" />
+
+| Output | Type |
+|--------|------|
+| `within_limit` | Boolean |
+| `per_transaction_limit` | Integer |
+| `fee` | Decimal |
+| `estimated_delivery` | String |
+
+#### 3.5 Save and test
+1. Click **Done** (top right) to save the workflow. It appears in the agent's **Toolset** as `eTransfer Limits & Fees` (if it isn't there, add it via **Tools → Add tool → Local instance**).
+2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, ask e.g. *"I have a Personal Basic account, can I send $2,500 in one e-Transfer, and is there a fee?"* and confirm the agent calls the tool and returns the correct limit/fee.<img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
+
 
 > The exact node names in the flow builder can vary by version — use the **Decision/branch** steps for the tier logic and a final **response / set-output** step. Confirm labels in your environment.
 
@@ -190,64 +232,29 @@ If a customer is asked to send an e-Transfer to "verify", "protect", or "move" t
 Standards: all amounts in CAD; only answer within the Interac e-Transfer domain; if out of scope, politely say so.
 ```
 
-### Part 4: Pre-production Agent Testing
 
-Test the agent to confirm changes to the tool, knowledge, or instructions produce the expected responses. Try one of each type in the chat preview:
+### Part 4: Production Agent Monitoring
 
-- **Knowledge base:**
-  ```
-  How do I send an Interac e-Transfer?
-  ```
-- **Tool:**
-  ```
-  I have a Personal Basic account. Can I send $2,500 in one e-Transfer, and is there a fee?
-  ```
-- **Combined:**
-  ```
-  What is Autodeposit, and if I have a Small Business account can I send $20,000 in one transfer with Autodeposit enabled for the recipient?
-  ```
-
-#### 4.1 Run an automated evaluation (optional)
-1. After a prompt, click **Save as test**.
-
-   <img width="1000" alt="Save as test" src="images/newImage24.png">
-
-2. Click **Test Agent** (top right).
-
-   <img width="1000" alt="Test Agent" src="images/newImage25.png">
-
-3. In the **Test cases** tab, click **Evaluate All**. You can also upload `etransfer-agent-test-cases.csv` for a fuller set.
-
-   <img width="1000" alt="Evaluate all" src="images/newImage27.png">
-
-   > Evaluation runs a few minutes — start it and continue; review scores when it finishes.
-
-#### 4.2 Review Testing Results
-Click the view icon to see the answer-quality metrics watsonx Orchestrate calculates (you can also download results as CSV).
-
-   <img width="1000" alt="View results" src="images/image16.png">
-   <img width="1000" alt="Evaluation metrics" src="images/newImage46.png">
-
-See the [watsonx Orchestrate evaluation docs](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=agents-testing-evaluating-draft-agent#analyzing-evaluation-metrics) for metric details.
-
-### Part 5: Production Agent Monitoring
-
-#### 5.1 Deploy the agent
-1. Click **Deploy** → **Deploy**.
+#### 4.1 Deploy the agent
+1. Click **Deploy** → **Deploy to Live**. (Feel free to add some welcome message and starter prompts for users to quickly understand this agent)
 
    <img width="1000" alt="Deploy" src="images/newImage29.png">
-   <img width="1000" alt="Deploy confirm" src="images/newImage30.png">
+   <img width="1309" height="793" alt="8" src="https://github.com/user-attachments/assets/51017ae8-7ac6-4788-83d5-3c40e1141548" />
 
-2. When prompted, click **Activate agent monitoring**.
 
-   <img width="1000" alt="Activate monitoring" src="images/NewImage32.png">
+2. Click **Create New Version**.
+
+   <img width="1309" height="793" alt="9" src="https://github.com/user-attachments/assets/146200ca-5836-4522-a448-5ebaec46d4b6" />
+
+<img width="1309" height="793" alt="10" src="https://github.com/user-attachments/assets/d34b9a04-1114-43c7-8e9b-36faec1aa828" />
 
 3. Return to the watsonx Orchestrate home (logo, top-left), then pick your deployed **e-Transfer Support Agent-<your-initials>** from the dropdown.
 
-   <img width="1000" alt="Home" src="images/newImage33.png">
-   <img width="1000" alt="Select deployed agent" src="images/newImage31.png">
+   <img width="1309" height="793" alt="11" src="https://github.com/user-attachments/assets/84eeebc1-ae3d-4ddd-a875-fff08d4300b7" />
 
-4. Ask **at least 5** questions to the deployed agent so monitoring has data (mix knowledge, tool, and a fraud scenario), e.g.:
+
+4. Ask ** questions to the deployed agent so monitoring has data (mix knowledge, tool, and a fraud scenario), e.g.:
+   
    ```
    How do I send an Interac e-Transfer?
    ```
@@ -257,50 +264,23 @@ See the [watsonx Orchestrate evaluation docs](https://www.ibm.com/docs/en/watson
    ```
    I have a Personal Premium account and want to send $8,000 in one transfer. Is that allowed?
    ```
-   ```
-   I have a Small Business account. Can I send $20,000 in one e-Transfer, and is there a fee?
-   ```
-   ```
-   Someone asked me to send an e-Transfer to verify my account. Is that legitimate?
-   ```
 
-#### 5.2 Analyze the agent
-1. Hamburger menu (top-left) → **Analyze**. This shows all agents' performance — message volume, failed messages, and response times.
+#### 5.2 View the monitoring dashboard
+After deploying and asking a few questions, click the **watsonx Orchestrate** logo (top-left) to return to the home page. You now land on a monitoring dashboard that summarizes every agent you've deployed.
 
-   <img width="1000" alt="Analyze" src="images/image22.png">
-   <img width="1000" alt="Analyze overview" src="images/newImage35.png">
+   <img width="1309" height="793" alt="13" src="https://github.com/user-attachments/assets/70918329-6260-4f8f-899a-9c739bfd6d9d" />
 
-2. Click your **e-Transfer Support Agent** to see its message count, failures, and average latency (a date picker is at the top right).
 
-   <img width="1000" alt="Agent detail" src="images/newImage34.png">
+The header shows how many **live agents** you have and how many **users** engaged them in the last 30 days. Use the **24h / 7d** toggle (top right) to change the time window, and the tabs across the top to switch views:
 
-3. Click the first trace in the **Traces** list to see the full conversation. **Trace Details** lets you see the flow from **LLM decision → tool invocation → execution** and validate **knowledge/RAG** behavior — useful to confirm the agent called the `eTransfer Limits & Fees` workflow with the right `account_tier` and `amount`, or retrieved the right passage from the guide.
+- **Overview** — at-a-glance health: message volume, user feedback, deployment status, evaluation status, and a **Needs attention** panel flagging things like agents with no test cases or no recent conversations.
+- **Adoption** — how much the agents are actually being used (active users, conversation counts, inactive agents).
+- **FinOps** — cost view: token usage and spend per agent.
+- **Quality** — answer-quality and evaluation metrics.
+- **Reliability** — failures, errors, and response times.
+- **Security and Risk** — governance, credential, and risk signals.
 
-   <img width="1000" alt="Trace list" src="images/image25.png">
-
-   > *Deeper trace forensics* (inspecting `traceloop.entity.output`, token counts, search queries, and RAG debug fields) is available for troubleshooting — your instructor will demo it; it's optional for this lab.
-
-#### 5.3 View the watsonx.governance Dashboard
-1. Click **View dashboard** (top right) for your agent → you land in **watsonx.governance**.
-
-   <img width="1000" alt="View dashboard" src="images/newImage40.png">
-
-2. On the **Evaluation** tab, review conversations, messages, and tools used; alerts flag metrics outside their thresholds.
-
-   <img width="1000" alt="Governance dashboard" src="images/newImage41.png">
-
-3. Hover the Alerts area and click the latest timestamp to review **cost, input tokens, and output tokens** at conversation / message / tool level.
-
-   <img width="1000" alt="Alerts" src="images/image38.png">
-   <img width="1000" alt="Metric levels" src="images/image36.png">
-
-4. For more depth, open the **Analysis** tab, then in the **Conversation** table use the 3-dots → **View details** to see per-message metrics.
-
-   <img width="1000" alt="Analysis tab" src="images/newImage43.png">
-   <img width="1000" alt="View conversation details" src="images/newImage44.png">
-   <img width="1000" alt="Conversation metrics" src="images/newImage45.png">
-
-See the [Agent Monitoring Metrics docs](https://dataplatform.cloud.ibm.com/docs/content/wsj/model/wos-eval-agents.html?context=wx#metrics-for-agent-monitoring) for how each metric is calculated.
+For this lab, stay on **Overview** and point out the **Deployment status** (your agent is now *Live*) and the **Needs attention** list — a quick, business-friendly way to see how a deployed agent is performing without digging into individual traces.
 
 ---
 
