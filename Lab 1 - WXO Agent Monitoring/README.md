@@ -107,7 +107,8 @@ This demonstrates knowledge-base integration, custom-tool integration, and agent
 
 5. Click **Edit knowledge settings** → choose **Dynamic**, set **Maximum Search Results** to **10** → **Save**.
 
-   <img width="1000" alt="Edit knowledge settings" src="images/newImage8.png">
+<img width="1460" height="816" alt="1" src="https://github.com/user-attachments/assets/f26b348f-2d60-468b-a27b-bfb116767546" />
+
    <img width="1000" alt="Knowledge settings" src="images/newImage9.png">
 
    > Indexing runs in the background — continue to Part 3 while it finishes.
