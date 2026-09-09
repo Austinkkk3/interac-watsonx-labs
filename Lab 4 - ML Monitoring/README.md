@@ -1,397 +1,117 @@
-# Parts Demand Forecasting Governance Lab (Watson OpenScale)
+# Lab 4: Interac Transaction-Volume Forecasting Governance with Watson OpenScale (~50 min)
 
 > **Interac watsonx Enablement Workshop.** Scenarios, personas, and data in this lab are fictional and for demonstration only.
 
+## What you'll do
 
-## Use Case: ML Demand Forecasting Governance
+Interac processes very high e-Transfer volumes nationwide, so accurate **transaction-volume forecasts** drive capacity planning, settlement readiness, and healthy fraud/monitoring baselines. A data-science team built a **LightGBM regression model** that forecasts e-Transfer transaction volume over time.
 
-## Introduction
+**This lab is not about building the model — it's about governing it in production with IBM Watson OpenScale:** monitoring forecast **quality**, detecting **drift**, **explaining** predictions, and keeping an **audit trail (AI Factsheets)** — the model-risk-management story a regulated financial institution needs.
 
-This use case describes how a **machine learning parts demand forecasting model**, developed for a large Canadian enterprise, is deployed into production and governed using **IBM Watson OpenScale**.
+**Format (Lite):**
+- **Part A — Deploy the model (hands-on, ~20 min):** create the project, run the provided notebook, get the model Online.
+- **Part B — Govern it with OpenScale (instructor-led demo, ~20 min):** configure Quality / Drift / Explainability monitors.
+- **Part C — Review results (~10 min):** run one evaluation and read the risk report.
 
-The solution demonstrates how IBM technologies enable:
-- Scalable and repeatable demand forecasting
-- Post-deployment monitoring and governance
-- Institutionalization of data science knowledge beyond individual contributors
+---
 
-## Customer Background
+## ⚠️ Environment prerequisite (read first)
 
-The client’s Data Science team was newly formed and faced challenges related to transparency, manual forecasting processes, and reliance on individual expertise.  
-Through an IBM Client Engineering (CE) engagement, IBM helped the client modernize parts demand forecasting using machine learning and establish strong data science and governance foundations.
+Watson OpenScale evaluations (Part B/C) store results in an **evaluation database (datamart)** attached to the account's **watsonx.governance / OpenScale** service instance. Configuring it needs **administrator rights**.
 
-Key outcomes:
-- **Significant improvement in forecasting accuracy**
-- Forecasting for **all parts simultaneously**
-- Reduced manual effort and dependency on senior individuals
+To avoid the most common failure ("Database required" / "Associate a service instance"), **do the entire lab in ONE account and region where:**
+1. you have **admin** on the watsonx.governance instance, and
+2. the **OpenScale datamart is already configured** (Watson OpenScale → System setup → Database shows a database), and
+3. the project, deployment space, and governance instance are all in **that same account + region**.
 
+Confirm this in the workshop environment **before** the session. If it isn't set up, Part B/C are run as an **instructor demo from screenshots / the included report**, and participants still do Part A hands-on.
 
-For this governance lab, we use the same machine learning parts demand forecasting model developed during the original engagement. The model is a supervised, tree-based regression model (LightGBM) trained on historical parts demand data, seasonality signals, and engineered time-series features.
-This model was previously validated with the client’s Data Science team and demonstrated a substantial reduction in forecasting error compared to legacy, manually driven forecasting methods.
-In this lab, the model itself is unchanged; the focus is on demonstrating how IBM Watson OpenScale enables post-deployment monitoring, explainability, and governance of a production-ready model.
-
-
-## Model Background
-
-For this governance lab, we use the **same machine learning parts demand forecasting model** developed during the original engagement.
-
-- **Model type:** Supervised regression  
-- **Algorithm:** LightGBM (tree-based)  
-- **Features:** Historical demand, seasonality, engineered time-series signals  
-
-## The Objective of this Lab
- 
-The objective here is to demonstrate **post-deployment monitoring, explainability, and governance** using **IBM Watson OpenScale**.
-
+---
 
 ## Prerequisites
 
-- IBM watsonx / Cloud Pak for Data environment
-- Get your API
-- Access to:
-  - Projects
-  - Deployment spaces
-  - Watson OpenScale
-- Deployment space already created (e.g., `bootcamp_gov`)
-- Make sure to consider ⚠️ the extra steps 
-
-
-## Get you API Key
-![IBM Cloud Region](images/API_1.png)
-![IBM Cloud Region](images/API_2.png)
-![IBM Cloud Region](images/API_3.png)
-
-## Step 1: Create Project
-
-1. Navigate to Watsonx.ai using IBM Cloud. Use [link](https://dataplatform.cloud.ibm.com/wx/home?context=wx). Make sure that you are in correct account and check that US(Dallas) is selected as the location. Your environment will be named something like "itz-watsonx-11".
-
-   ![IBM Cloud Login](images/image2.png)
-   ![IBM Cloud Region](images/image3.png)
-
-From **☰** Menu,  Navigate to **Projects** 
-
-![Project list](images/project_1.png)
-
-Create **New Project** 
-
-![Project list](images/project_2.png)
-
-Define the Project's **Name** `interac-ai-gov`
-
-![Define project details](images/3.png)
-
-In `interac-ai-gov` project, Got to **Manage**, Select **Services & Integrations**, Click on **Associate Service**
-
-![Step 4a](images/4.1.png)
-
-Select **watsonx.ai Runtime** and Click on **Associate**
-
-![Step 4b](images/4.2.png)
-
-⚠️You need to get an **acess token** to run the notebook and deploy the ML model. 
-
-In `interac-ai-gov` project, Got to **Manage**, Select **Access control**, Click on **Access tokens** and then Click on **New access token**
-
-![Step 4b](images/4.3.png)
-
-Give the access token **Name** `ml_gov`, **Acess role** `Editor` then Click on **Create**
-
-![Step 4b](images/4.4.png)
-
-From **☰** Menu, Navigate to **Deployment spaces**
-
-![Step 4b](images/4.5.png)
-
-Go to **Spaces** and Click on **New deployment space**
-
-![Step 4b](images/4.6.png)
-
-Give the Development space **Name** `bootcamp_gov`, **Stage:** select `Development`, **Runtime:** `wml-itz-wxo-xxxxxxxxxxxxx` and  **Storage:** `cos-itz-wxo-xxxxxxxxxxxx`
-
-![Step 6a](images/4.7.png)
-
-⚠️You need to get the **space_id** to run the notebook and deploy the ML model. 
-
-In Deployment spaces, Capture the Deployment Space QuUID. Go to **Manage**, select **General** and **Space GUID:** `xxxxxxx-xxxx-xxx-xxx-xxxxxxxxxxxx` for the notebook
-
-![Step 6b](images/4.8.png)
-
-
-## Step 2: Import Demand Forecasting Notebook
-
- From **☰** Menu, Navigate to back **Projects** , Select **View all projects** and Click on **interac-ai-gov** and **New asset**
-
-![Step 5](images/5.png)
-
-Look for **Work with data and models in Python or R notebooks** and Select it. 
-
-![Step 7](images/5.1.png)
-
-Go to **Local file** and Click on **Browse**
-
-![Upload notebook](images/6.png)  
-
-Upload `demand_forecasting.ipynb` the file you downloaded from this repo. 
-
-![Upload notebook](images/6.1.png)
-
-Click on **Create**
-
-![Notebook details](images/7.png)
-
-## Step 3: Run the Notebook to depoly the ML
-
-The notebook is **pre-built and validated**.
-
-> ⚠️ No code changes are required.
-
-Simply:
-
--Open the notebook that you just uploaded it in the project 
-
-![Notebook details](images/7.0.1.png)
-
--Click on Edit the **notebook**
-
-![Notebook details](images/7.1.png)
-
-- Upload the data 'training_data_v2.csv' that you downloaded from this repo. Just Drag-and-drop the file. 
-
-![Notebook details](images/7.1.1.png)
-
-- Insert the **project access token** and the **Space_id**, both obtained in the previous steps 
-
-![Notebook details](images/7.2.png)
-
-Then, go to **Run > Run all Cells**. That will deploy the ML model to monitor
-
-![Run notebook](images/8.png)
-
-
-## Step 4: Verify Deployment Space
-
-Navigate to **Deployment spaces**
-
-![Deployment spaces](images/9.png)  
-
-Click on `bootcamp_gov`
-
-![Select space](images/10.png)
-
-Confirm that the model deployment exists and is **Online**.
-
-![Deployment list](images/11.png) 
-
-Click on `demand_forecasting_lgbm`, Go to **Evaluation**, click on **Configure OpenScale evaluation settings**
-
-![Deployed model](images/12.png)
+- A watsonx / Cloud Pak for Data environment with access to **Projects**, **Deployment spaces**, and **Watson OpenScale**.
+- An IBM Cloud **API key** (Get your API key: Manage → Access (IAM) → API keys → Create).
+- Files from this repo: `demand_forecasting.ipynb`, `training_data_v2.csv`, `test_data.csv`.
 
 ---
 
-## Step 5: Configure Watson OpenScale Evaluations
+## Part A — Deploy the model (hands-on)
 
-From the drop-down menu, select **Data type:** Numeric / categorical, **Algorithm type:** Regression and Click on **View summary**
- 
-![Evaluations tab](images/13.png)
+### Step 1: Create project + deployment space
 
-Review and Click on **Save and continue**
+1. Go to [watsonx.ai](https://dataplatform.cloud.ibm.com/wx/home?context=wx); confirm you're in the **correct account and region**.
+2. **☰ Menu → Projects → New project**, name it `interac-ai-gov`.
+3. In the project → **Manage → Services & Integrations → Associate service** → select **watsonx.ai Runtime** → **Associate**.
+4. ⚠️ Create an access token: **Manage → Access control → Access tokens → New access token**, name `ml_gov`, role **Editor** → **Create**. *(Needed to run the notebook.)*
+5. **☰ Menu → Deployment spaces → New deployment space**, name `bootcamp_gov`, stage **Development**, pick the environment's **Runtime** and **Storage**.
+6. ⚠️ Capture the **Space GUID**: in the space → **Manage → General → Space GUID**. *(Needed by the notebook.)*
 
-![Model information](images/14.png)
+### Step 2: Import the notebook
 
-In the page, **use manual setup** is the only option, go **Next**.
+In `interac-ai-gov` → **New asset → Work with data and models in Python or R notebooks → Local file → Browse** → upload `demand_forecasting.ipynb` → **Create**.
 
-![Review setup](images/15.png)
+### Step 3: Run the notebook to deploy the model
 
-Select **Upload file**
+The notebook is pre-built and validated — **no code changes needed**.
 
-![Upload training data](images/16.png)
+1. Open the notebook → **Edit**.
+2. Drag-and-drop `training_data_v2.csv` into the notebook to upload it.
+3. Insert your **project access token** and the **Space GUID** from Step 1.
+4. **Run → Run All Cells.** This trains and deploys the LightGBM model (`demand_forecasting_lgbm`) to `bootcamp_gov`.
+   - 📌 Note the **RMSE** the notebook prints — you'll use it as a Quality threshold in Part B.
 
-Browse to the training dataset `training_data_v2.csv` used to train the ML model
+### Step 4: Verify the deployment
 
-![Select CSV delimiter](images/17.png)
+**Deployment spaces → `bootcamp_gov`** → confirm `demand_forecasting_lgbm` exists and is **Online**.
 
-Choose **Comma (,) ** as the delimiter to match the training dataset format.
+✅ *Everyone should reach this point. The model is now deployed and ready to be governed.*
 
-![Select features and label](images/18.png)
+---
 
-Confirm all engineered time-series features and set **target** as the label column.
+## Part B — Govern the model with Watson OpenScale (instructor-led)
 
-![Select features continued](images/19.png)
+> Presenter drives; participants follow along if their environment has the datamart configured, otherwise watch. This is where the governance value shows.
 
-![Select model output](images/20.png)
+On the deployed `demand_forecasting_lgbm` → **Evaluation → Configure OpenScale evaluation settings**.
 
-Select the **prediction** column generated by the deployed model.
+1. **Model details:** Data type **Numeric / categorical**, Algorithm type **Regression** → **View summary → Save and continue**.
+2. **Manual setup → Next.** Upload `training_data_v2.csv` as the training reference (delimiter **Comma**). Confirm the time-series features, set **`target`** as the label and select the **prediction** column → **Finish**.
+3. Enable the three monitors that apply to a regression forecast (skip **Fairness** — N/A for time-series regression):
 
-![Configure quality metrics](images/21.png)
+   **✅ Quality** — forecast accuracy over time:
+   - **Pearson** 0.8 (do peaks/drops line up over time)
+   - **Spearman** 0.6 (is the relative volume ranking preserved)
+   - **RMSE** ← use the value from the notebook (sample: ~2454)
+   - Sample size: min **300**, max **1000**
 
-Review the step-up and Confirm:
+   **✅ Drift v2** — early warning before accuracy drops:
+   - Compute **in Watson OpenScale**
+   - Upper thresholds: Output drift **0.2**, Feature drift **0.2**
+   - Important feature: **`TXN_VOLUME`** → Next → Save
 
-- Algorithm type: Regression  
-- Input type: Numeric / categorical  
-- Training data reference  
-- Feature list and prediction column
+   **✅ Explainability** — why the model predicts what it does:
+   - Enable **Global explanation**, method **LIME (enhanced)** (global + local)
+   - Parameters: sample size **5000**, stability threshold **0.85**, use training-data global explanation → Save
 
-Click on **Finish**
+4. Close the setup when the monitors finish initializing.
 
-![Review model details](images/22.png)
+---
 
-Complete OpenScale Setup
+## Part C — Run and review evaluations
 
-![Complete setup uploading](images/23.png)
+1. **Evaluation → Actions → Evaluate Now → Import from CSV** → upload `test_data.csv` → **Upload and Evaluate** (takes a couple of minutes).
+2. Review the dashboard: **Quality** (Pearson/Spearman/RMSE), **Drift**, **Explainability**.
+3. Download the report — see the included example: [risk-evaluation-report](risk-evaluation-report-1769635817795.pdf).
 
-In this step, you configure governance evaluations for a deployed time-series demand forecasting model. You see there are four types of Evaluations:
+**Reading the result:** green = healthy. A **red drift** flag means the model is seeing input (e.g. the `TXN_VOLUME` feature) that differs from what it was trained on, so its predictions may shift — even while other health metrics look fine. That early warning is exactly the point of production monitoring.
 
-⚠️ Just Select the ones with ✅: 
+---
 
-⛔ Fairness (not applicable to regression time-series forecasting)
+## What this demonstrates
 
-✅ **Quality**:
-
-Monitors forecast accuracy over time using regression metrics (Pearson, Spearman, RMSE):
-
-  **Pearson**: Captures the model trend by measuring whether peaks align with peaks and drops align with drops over time.
-
-  **Spearman** : Captures the relative demand pattern (not exact values) by measuring whether higher-demand periods are ranked above lower-demand periods over time.
-
-  **RMSE**: The root of the average magnitude of prediction error
-
-
-✅ **Drift v2**:
-
-For ML model in production, it detects changes in time-series input distributions and Provides early warning signals before forecast accuracy declines.
-
-✅ **Explainability**:
-
-Uses SHAP or LIME to explain how input features contribute to demand forecasts
-
-![Complete setup summary](images/24.png)
-
-Click on Quality and then Click on **Edit**
-
-![Setup finished](images/25.png)
-
-Set **Quality thresholds**:
-
-**Pearson**: 0.8
-
-**Spearman**: 0.6
-
-**Root of mean squared error (RMSE)**: 2454 ( I got RMSE from the Notebook )
-
-![Setup finished](images/26.png)
-
-Set **Sample Size**: 
-
-**Minimum samples sizes**: 300
-
-**Maximum samples sizes**: 1000
-
-![Step 27](images/27.png)
-
-Click on Drift v2 and then Click on **Edit**
-
-![Step 27](images/28.1.png)
-
-In **Compute option**, Select Compute on **Compute in Watson OpenScale**
-
-![Step 27](images/28.2.png)
-
-Set **Upper thersholds**, **Output drift**: 0.2 and **Feature Drift**: 0.2 
-
-![Step 27](images/28.3.png)
-
-In **Importaant features**, select **PART_DEMAND** feature (you can select up to 10 features all togather) and Click on **Next**.
-
-![Step 27](images/28.4.png)
-
-Select **PART_DEMAND**, Click on **Next**
-
-![Step 27](images/28.5.png)
-
-Keep the **Minimum sample size** and Click **Save**.
-
-![Step 27](images/28.6.png)
-
-Wait for some time. 
-
-![Step 27](images/28.7.png)
-
-Click on Explainability, Parametes, and then Click on **Edit**
-
-![Step 30](images/29.png)
-
-- Enable **Global explanation**
-- Choose **LIME (enhanced)** for:
-  - Global explanation method
-  - Local explanation method
-
-![Step 30](images/30.png)
-
-- Click **Edit** under *Parameters*
-- Set **Sample size (number of transactions)** to `5000`
-- Set **Global explanation stability threshold** to `0.85`
-- Select **Use training data global explanation**
-- Click **Save**
-
-![Step 31](images/31.png)
-
-Wait for some time ( couple of minutes). 
-
-![Step 32](images/32.png)
-
-Click on Close **X**
-
-![Step 32](images/33.png)
-
-## Step 6: Run and Review Evaluations
-
-Go to **Evalulation**, Click on **Actions** and Select **Evaluate Now**
-
-![Step 32](images/35.png)
-
-Select from **Import** `from CSV file` and Click on browse.
-
-![Step 32](images/36.png)
-
-Select 'test_data.csv' that you downloaded from this repo.
-
-![Step 32](images/36.1.png)
-
-Click on **Upload and Evaluate** and wait for couple of minutes to complete the evaluation 
-
-![Step 32](images/37.png)
-
-The Evaluations in completed 
-
-![Step 32](images/38.png)
-
-You can also download the report
-
-Click on this to see the report ==> [REPORT](risk-evaluation-report-1769635817795.pdf) 
-
-![Step 32](images/39.png)
-
-Things looks normal (green). 
-
-The red drift indicator means the model is receiving input `Features` (in our case `PART_DEMAND` feature) that might differ from what it was trained on, causing its `Output` predictions to shift, even though all other model health metrics remain normal.
-
-
-
-## What This Demonstrates
-
-Using Watson OpenScale, your organization can now:
-- Monitor **model performance drift**
-- Track **data drift**
-- Explain predictions using feature attribution
-- Maintain **AI Factsheets** for compliance and audit
-- Ensure continuity even when team members leave
-
+With Watson OpenScale, Interac could monitor **model performance drift** and **data drift**, **explain** forecasts with feature attribution, keep **AI Factsheets** for audit, and keep a production model governed even as team members change — the core of responsible **model risk management** for a regulated financial institution.
 
 ## Summary
 
-This lab revisits a **previously successful ML model** and demonstrates how **IBM Watson OpenScale** enables trustworthy AI through governance, monitoring, and transparency.
-
-The focus is not on building a new model, but on showing how **production-ready AI systems are governed responsibly at scale**.
-
----
-
-
+Lab 4 shows how **IBM Watson OpenScale** governs a production **transaction-volume forecasting** model — monitoring, explainability, and audit at scale. The focus is not building a model, but **governing production AI responsibly.**
