@@ -15,18 +15,7 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
 
 ---
 
-## ⚠️ Environment prerequisite (read first)
 
-Watson OpenScale evaluations (Part B/C) store results in an **evaluation database (datamart)** attached to the account's **watsonx.governance / OpenScale** service instance. Configuring it needs **administrator rights**.
-
-To avoid the most common failure ("Database required" / "Associate a service instance"), **do the entire lab in ONE account and region where:**
-1. you have **admin** on the watsonx.governance instance, and
-2. the **OpenScale datamart is already configured** (Watson OpenScale → System setup → Database shows a database), and
-3. the project, deployment space, and governance instance are all in **that same account + region**.
-
-Confirm this in the workshop environment **before** the session. If you hit **"Database required"** (or "Associate a service instance") in Part B, your governance instance has no datamart associated — flag it to the environment administrator; Parts B–C can't run until it's set up. (Part A does not need the datamart.)
-
----
 
 ## Prerequisites
 
