@@ -124,11 +124,13 @@ This demonstrates knowledge-base integration, custom-tool integration, and agent
 #### 3.1 Import Tool via UI
 1. Scroll to the **Toolset** section → **Add tool +**.
 
-   <img width="1000" alt="Add tool" src="images/image2.png">
+   <img width="1346" height="816" alt="2" src="https://github.com/user-attachments/assets/f52c3f5d-9661-4559-8ae1-45c070103fd4" />
+
 
 2. Select **Import** → **OpenAPI**.
 
-   <img width="1000" alt="Import OpenAPI" src="images/newImage50.png">
+   <img width="1346" height="816" alt="3" src="https://github.com/user-attachments/assets/f6a9e1c0-07b4-4a7b-853f-3ef05b3cd511" />
+
 
 3. Upload `instructor/etransfer_tool.json`. Select the **Etransfer Tool** operation (`POST /etransfer_tool`) → **Add to agent**. (You don't need the `Root` or `Get Tiers` operations.)
 
