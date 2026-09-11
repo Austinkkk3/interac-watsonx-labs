@@ -11,7 +11,7 @@
 
 Jose works at **TechCorp Inc.**, a large multinational enterprise using AI to improve HR processes like hiring and employee planning.
 
-But there was a problem...  
+But there was a problem... 
 AI was everywhere, but **nobody really knew**:
 - Who built what
 - Whether the models were fair
