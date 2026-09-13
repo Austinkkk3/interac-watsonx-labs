@@ -137,6 +137,8 @@ The notebook is pre-built and validated — **no code changes needed**.
    - **Pearson** 0.8 (do peaks/drops line up over time)
    - **Spearman** 0.6 (is the relative volume ranking preserved)
    - **RMSE** ← use the value from the notebook (sample: ~2454)
+     <img width="1308" height="764" alt="Screenshot 2026-09-13 at 12 16 42 PM" src="https://github.com/user-attachments/assets/a0999549-90a8-41af-81e4-1c1760292614" />
+
    - Sample size: min **300**, max **1000**
 
    ![Quality edit](images/25.png)
