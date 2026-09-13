@@ -133,14 +133,15 @@ The notebook is pre-built and validated — **no code changes needed**.
 
    ![Monitors](images/24.png)
 
-   **✅ Quality** — forecast accuracy over time. Click **Quality → Edit**:
-   - **Pearson** 0.8 (do peaks/drops line up over time)
-   - **Spearman** 0.6 (is the relative volume ranking preserved)
-   - **RMSE** ← use the value from the notebook (sample: ~2454)
-     <img width="1308" height="764" alt="Screenshot 2026-09-13 at 12 16 42 PM" src="https://github.com/user-attachments/assets/a0999549-90a8-41af-81e4-1c1760292614" />
-
+ **✅ Quality** — forecast accuracy over time. Click **Quality → Edit**. 
+ Set each threshold from the metrics your notebook printed in **Section 8**. 
+ Pearson/Spearman are **lower bounds** (your value must stay *above* them); 
+ RMSE is an **upper  bound** (your value must stay *below* it). Leave a little margin so the first evaluation passes:
+   - **Pearson** — set a bit **below** your notebook's Pearson (e.g. notebook 0.62 → enter **0.5**)
+   - **Spearman** — set a bit **below** your notebook's Spearman (e.g. notebook 0.76 → enter **0.6**)
+   - **RMSE** — set a bit **above** your notebook's RMSE (e.g. notebook 184 → enter **250**)
    - Sample size: min **300**, max **1000**
-
+     <img width="1308" height="764" alt="Screenshot 2026-09-13 at 12 16 42 PM" src="https://github.com/user-attachments/assets/a0999549-90a8-41af-81e4-1c1760292614" />
    ![Quality edit](images/25.png)
    ![Quality thresholds](images/26.png)
    ![Sample size](images/27.png)
