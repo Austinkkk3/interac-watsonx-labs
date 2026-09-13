@@ -66,8 +66,7 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
 
 ### Step 2: Import the notebook
 
-In `interac-ai-gov` → **New asset → Work with data and models in Python or R notebooks → Local file → Browse** → upload `demand_forecasting.ipynb` → **Create**.
-
+First, go back to your project (Step 1 left you in a deployment space): ☰ Menu → Projects → open interac-ai-gov. Notebooks are created in the project, not in a deployment space.
    ![New asset](images/5.png)
    ![Notebook editor](images/5.1.png)
    ![Browse local file](images/6.png)
