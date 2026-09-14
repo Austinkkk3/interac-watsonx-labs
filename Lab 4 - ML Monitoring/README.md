@@ -154,8 +154,12 @@ The notebook is pre-built and validated — **no code changes needed**.
    ![Drift edit](images/28.1.png)
    ![Compute option](images/28.2.png)
    ![Drift thresholds](images/28.3.png)
-   ![Important features](images/28.4.png)
-   ![Select feature](images/28.5.png)
+ 
+
+  <img width="1308" height="764" alt="Screenshot 2026-09-13 at 8 30 08 PM" src="https://github.com/user-attachments/assets/ece2a9ec-6e1b-4679-a60c-2c07a087016b" />
+
+ <img width="1308" height="764" alt="Screenshot 2026-09-13 at 8 32 41 PM" src="https://github.com/user-attachments/assets/7fc2d217-1c4a-44e4-9efd-0f03f7e762fd" />
+ 
    ![Save drift](images/28.6.png)
    ![Drift initializing](images/28.7.png)
 
