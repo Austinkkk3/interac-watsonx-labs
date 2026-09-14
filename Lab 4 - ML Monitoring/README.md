@@ -190,12 +190,14 @@ The notebook is pre-built and validated — **no code changes needed**.
    ![Import from CSV](images/36.png)
    ![Select test data](images/36.1.png)
    ![Upload and evaluate](images/37.png)
+   
+   **Check "Test data includes model output" before evaluation** 
 
-2. Review the dashboard: **Quality** (Pearson/Spearman/RMSE), **Drift**, **Explainability**.
+3. Review the dashboard: **Quality** (Pearson/Spearman/RMSE), **Drift**, **Explainability**.
 
    ![Evaluation complete](images/38.png)
 
-3. Download the report — see the included example: [risk-evaluation-report](risk-evaluation-report-1769635817795.pdf).
+4. Download the report — see the included example: [risk-evaluation-report](risk-evaluation-report-1769635817795.pdf).
 
    ![Report](images/39.png)
 
