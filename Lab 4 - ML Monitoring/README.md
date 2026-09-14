@@ -201,8 +201,8 @@ The notebook is pre-built and validated — **no code changes needed**.
 
 ## What this demonstrates
 
-With Watson OpenScale, Interac could monitor **model performance drift** and **data drift**, **explain** forecasts with feature attribution, keep **AI Factsheets** for audit, and keep a production model governed even as team members change — the core of responsible **model risk management** for a regulated financial institution.
+With Watson OpenScale, Interac can govern a production forecasting model end to end: monitor forecast quality against thresholds, detect data and output drift as an early warning, explain predictions with feature attribution, and keep an AI Factsheet audit trail. And the monitors don't just sit green — in this lab the evaluation triggers real alerts: several quality metrics breach their thresholds and OpenScale raises an output-drift flag, signalling that the model's predictions have shifted from what it was trained on. That's exactly the point — OpenScale surfaces a model degrading in production before it affects capacity planning or settlement, and keeps it governed even as team members change. Early warning plus a complete audit trail is the core of responsible model risk management for a regulated financial institution.
 
 ## Summary
 
-Lab 4 shows how **IBM Watson OpenScale** governs a production **transaction-volume forecasting** model — monitoring, explainability, and audit at scale. The focus is not building a model, but **governing production AI responsibly.**
+Lab 4 shows how IBM Watson OpenScale governs a production transaction-volume forecasting model — quality, drift, explainability, and audit at scale. The focus is not building the model but governing it: the monitors continuously check accuracy and drift and raise alerts when something moves, turning "is our model still healthy?" into a question a governance team can answer with evidence, at any time.
