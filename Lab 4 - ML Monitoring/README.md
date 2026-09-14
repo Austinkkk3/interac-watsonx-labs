@@ -142,9 +142,13 @@ The notebook is pre-built and validated — **no code changes needed**.
    - **RMSE** — set a bit **above** your notebook's RMSE (e.g. notebook 184 → enter **250**)
    - Sample size: min **300**, max **1000**
      <img width="1308" height="764" alt="Screenshot 2026-09-13 at 12 16 42 PM" src="https://github.com/user-attachments/assets/a0999549-90a8-41af-81e4-1c1760292614" />
+     <img width="1297" height="684" alt="18" src="https://github.com/user-attachments/assets/9b2af2e7-e905-4661-b922-157903c84935" />
+
+     <img width="1297" height="684" alt="Screenshot 2026-09-14 at 3 00 37 PM" src="https://github.com/user-attachments/assets/0f542f12-5074-4efa-b6bc-b19a8ca852c3" />
+
    ![Quality edit](images/25.png)
    ![Quality thresholds](images/26.png)
-   ![Sample size](images/27.png)
+  
 
    **✅ Drift v2** — early warning before accuracy drops. Click **Drift v2 → Edit**:
    - Compute **in Watson OpenScale**
