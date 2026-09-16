@@ -52,7 +52,7 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
 ## Getting Started
 
-1. Navigate to Watsonx.ai using IBM Cloud. Use [link](https://dataplatform.cloud.ibm.com/wx/home?context=wx). Make sure that you are in correct account and check that US(Dallas) is selected as the location. Your environment will be named something like "itz-watsonx-11".
+1. Navigate to Watsonx.ai using IBM Cloud. Use [link](https://dataplatform.cloud.ibm.com/wx/home?context=wx). Make sure that you are in correct account and check that US(Dallas) is selected as the location. Your environment will be named something like "watsonx-events2".
 
    ![IBM Cloud Login](images/image2.png)
    ![IBM Cloud Region](images/image3.png)
@@ -96,7 +96,7 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
    ![Services & Integration](images/image11.png)
 
-9. Select the instance and click **Associate**
+9. Select the instance and click **Associate**. Create a new service (watsonx.ai Runtime) if no option available to select. 
 
    ![Associate Service](images/image12.png)
 
@@ -136,7 +136,7 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
    ![Select Prompt](images/image18.png)
 
-4. If the default model is not llama-3-3, go back, click **View**
+4. If the default model is not llama-3-3, go back, click **Edit**
    <img width="1326" height="750" alt="16" src="https://github.com/user-attachments/assets/5364c486-1f66-4a1d-a887-f4d8af8e4d24" />
 
 
@@ -208,7 +208,7 @@ Before deploying, customize the summarization prompt for Interac's dispute-summa
 
 ## Prompt Evaluations
 
-1. Lets evaluate the prompt. Click on **Evaluations** and click **Evaluate**
+1. Let's evaluate the prompt. Click on **Evaluations** and click **Evaluate**. If there is a pop-up, click **Associate a service instance**
 
    ![Start Evaluation](images/image29.png)
 
