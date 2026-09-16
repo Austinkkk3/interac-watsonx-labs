@@ -317,9 +317,13 @@ Standards: all amounts in CAD; only answer within the Interac e-Transfer domain;
 
    <img width="1309" height="793" alt="9" src="https://github.com/user-attachments/assets/146200ca-5836-4522-a448-5ebaec46d4b6" />
 
-<img width="1309" height="793" alt="10" src="https://github.com/user-attachments/assets/d34b9a04-1114-43c7-8e9b-36faec1aa828" />
+   <img width="1309" height="793" alt="10" src="https://github.com/user-attachments/assets/d34b9a04-1114-43c7-8e9b-36faec1aa828" />
+   <img width="1470" height="831" alt="Screenshot 2026-09-16 at 4 12 24 PM" src="https://github.com/user-attachments/assets/96a78613-6647-4464-8ce0-4b8003761080" />
+   <img width="1470" height="830" alt="Screenshot 2026-09-16 at 4 13 00 PM" src="https://github.com/user-attachments/assets/ba170e3c-62a9-4056-8a91-43fa3fcb1ce9" />
 
-3. Return to the watsonx Orchestrate home (logo, top-left), then pick your deployed **e-Transfer Support Agent-<your-initials>** from the dropdown.
+
+
+3. Click the hamburger menu (☰) and select **Chat**, then pick your deployed **e-Transfer Support Agent-<your-initials>** from the dropdown.
 
    <img width="1309" height="793" alt="11" src="https://github.com/user-attachments/assets/84eeebc1-ae3d-4ddd-a875-fff08d4300b7" />
 
