@@ -156,25 +156,53 @@ From **Flow nodes → Logic block**, drop a **Logic block** between the start an
 <img width="1423" height="816" alt="5" src="https://github.com/user-attachments/assets/bb98731c-ceb5-4351-bfa6-b6faa574e48f" />
 
 ```python
-# eTransfer limits / fees / delivery — illustrative sample values
+# Interac e-Transfer limits / fees / delivery — illustrative sample values for the demo
 tiers = {
     "personal basic":   {"limit": 3000,  "fee": 0.00},
     "personal premium": {"limit": 5000,  "fee": 0.00},
     "small business":   {"limit": 25000, "fee": 1.50},
 }
 
-tier = (account_tier or "").strip().lower()
+# Read the inputs (watsonx Orchestrate exposes them on `self`)
+try:
+    raw_account_tier = self.account_tier
+except AttributeError:
+    raw_account_tier = ""
+try:
+    raw_transfer_type = self.transfer_type
+except AttributeError:
+    raw_transfer_type = ""
+try:
+    raw_amount = self.amount
+except AttributeError:
+    raw_amount = 0
+try:
+    raw_autodeposit = self.recipient_has_autodeposit
+except AttributeError:
+    raw_autodeposit = False
+
+# Normalize
+tier = (raw_account_tier or "").strip().lower()
+ttype = (raw_transfer_type or "").strip().lower()
+if raw_amount is None:
+    amount = 0
+else:
+    try:
+        amount = float(raw_amount)
+    except (ValueError, TypeError):
+        amount = 0
+recipient_has_autodeposit = bool(raw_autodeposit) if raw_autodeposit is not None else False
+
 info = tiers.get(tier, {"limit": 0, "fee": 0.00})
 per_transaction_limit = info["limit"]
 
 # Requesting money is always free; otherwise use the tier's send fee
-ttype = (transfer_type or "").strip().lower()
 fee = 0.00 if ttype == "request money" else info["fee"]
 
-# Is the transfer within the per-transaction limit?
+# Within the per-transaction limit?
 within_limit = amount <= per_transaction_limit
 
-# Estimated delivery
+# Estimated delivery (Interac e-Transfers are near-instant)
 if recipient_has_autodeposit:
     estimated_delivery = "Within seconds (Autodeposit)."
 elif ttype == "request money":
@@ -182,13 +210,28 @@ elif ttype == "request money":
 else:
     estimated_delivery = "Typically within 30 minutes after the recipient accepts and answers the security question."
 
-return {
-    "within_limit": within_limit,
-    "per_transaction_limit": per_transaction_limit,
-    "fee": fee,
-    "estimated_delivery": estimated_delivery,
-}
+# Human-readable summary the agent can present directly
+tier_label = tier.title() if tier in tiers else (raw_account_tier or "your account")
+fee_text = "no fee" if fee == 0 else f"a ${fee:,.2f} fee"
+if tier not in tiers:
+    summary = (f"I don't recognize the account tier '{raw_account_tier}'. "
+               f"Valid tiers are: Personal Basic, Personal Premium, or Small Business.")
+elif within_limit:
+    summary = (f"Yes - a ${amount:,.0f} transfer is within your {tier_label} "
+               f"per-transaction limit of ${per_transaction_limit:,.0f}, with {fee_text}. "
+               f"Estimated delivery: {estimated_delivery}")
+else:
+    summary = (f"A ${amount:,.0f} transfer exceeds your {tier_label} per-transaction limit "
+               f"of ${per_transaction_limit:,.0f}. You could split it into smaller transfers "
+               f"or move to a higher tier. If it were within limit, the fee would be {fee_text}.")
+
+# Do NOT add a `return` statement. watsonx Orchestrate Logic blocks capture the
+# output variables you declare in the Outputs tab by name (within_limit,
+# per_transaction_limit, fee, estimated_delivery, summary). A `return` here
+# throws "SyntaxError: 'return' outside function".
 ```
+
+> ⚠️ **No `return` statement.** The Logic block is not a function — it captures the output variables by name. Adding `return {...}` fails with `SyntaxError: 'return' outside function`.
 
 #### 3.4 Define the outputs
 In the Logic block's **Outputs** tab, add these outputs — the names must match the keys in the code above:
@@ -201,6 +244,7 @@ In the Logic block's **Outputs** tab, add these outputs — the names must match
 | `per_transaction_limit` | Integer |
 | `fee` | Decimal |
 | `estimated_delivery` | String |
+| `summary` | String |
 
 #### 3.5 Save and test
 1. Click **Done** (top right) to save the workflow. It appears in the agent's **Toolset** as `eTransfer Limits & Fees` (if it isn't there, add it via **Tools → Add tool → Local instance**).
@@ -226,7 +270,21 @@ When a customer asks whether a transfer is allowed, how much it costs, or how lo
 - amount: transfer amount in CAD
 - account_tier: "personal basic", "personal premium", or "small business"
 - recipient_has_autodeposit: yes or no (optional; default no)
-If the account tier or amount is missing, ask for it before calling the tool. Present results as a markdown table (transfer type, amount, account tier, within limit, per-transaction limit, fee, estimated delivery). If it exceeds the limit, explain and suggest splitting the transfer or a higher tier.
+If the account tier or amount is missing, ask for it before calling the tool.
+
+Presenting the result — NEVER show the raw JSON the tool returns. Turn it into a friendly reply: one sentence answering the question, then a compact markdown table. Example, for a $4,000 Small Business send that returns within_limit=true, per_transaction_limit=25000, fee=1.50, estimated_delivery="Typically within 30 minutes":
+
+Yes — a $4,000 e-Transfer is within your Small Business limit.
+
+| Detail | Value |
+|---|---|
+| Amount | $4,000 CAD |
+| Account tier | Small Business |
+| Within limit? | Yes (limit $25,000 per transaction) |
+| Fee | $1.50 |
+| Estimated delivery | Typically within 30 minutes |
+
+If within_limit is false, say so clearly and suggest splitting the transfer or upgrading the tier.
 
 3. Fraud Awareness
 If a customer is asked to send an e-Transfer to "verify", "protect", or "move" their money, warn them it's a common scam, tell them not to send it, and to contact their financial institution. Never encourage sending money to unknown recipients.
