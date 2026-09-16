@@ -136,7 +136,7 @@ Instead of hosting an external service, we build the limits/fees logic as a **no
 2. Under **Create**, choose **Agentic workflow** → **Start Building**.
    <img width="1346" height="816" alt="Screenshot 2026-09-08 at 10 10 59 PM" src="https://github.com/user-attachments/assets/8c43827e-e552-4e47-a597-9e3b8923b015" />
 
-3. Name it `eTransfer Limits & Fees` with the description:
+3. Name it `eTransfer Limits & Fees`. Click **Start Building**. Click **Edit Details** to add the description:
    ```
    Calculates the exact Interac e-Transfer sending limit, fee, and estimated delivery time for a given account tier, and checks whether a specific amount is allowed. Use this for ANY question about limits, fees, how much can be sent, whether a specific dollar amount is allowed, or how long a transfer takes — these must be computed, not retrieved from the knowledge base. Requires account_tier, transfer_type, and amount.
    ```
