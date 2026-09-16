@@ -14,8 +14,7 @@
   - [Part 1: Create the e-Transfer Agent](#part-1-create-the-e-transfer-agent-in-watsonx-orchestrate)
   - [Part 2: Add Knowledge Base (RAG)](#part-2-add-knowledge-base-rag)
   - [Part 3: Build the Limits/Fees Tool (Agentic Workflow)](#part-3-build-the-limitsfees-tool-agentic-workflow)
-  - [Part 4: Pre-production Agent Testing](#part-4-pre-production-agent-testing)
-  - [Part 5: Production Agent Monitoring](#part-5-production-agent-monitoring)
+  - [Part 4: Production Agent Monitoring](#part-4-production-agent-monitoring)
 
 ## Architecture
 
@@ -77,7 +76,7 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
 #### 2.1 Upload the e-Transfer Guide
 1. Click **Knowledge** section → **Add Source** → **New Knowledge**.
 
-<img width="1475" height="816" alt="Screenshot 2026-09-08 at 9 15 13 PM" src="https://github.com/user-attachments/assets/ec2132a7-87b9-4e9a-979e-7cd0b7511586" />
+<img width="1475" height="816" alt="Screenshot 2026-09-08 at 9 15 13 PM" src="https://github.com/user-attachments/assets/ec2132a7-87b9-4e9a-979e-7cd0b7511586" />
 
 
 2. Select **Upload Files** → **Next**.
@@ -96,7 +95,7 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
 1. **Name**: `eTransfer-knowledge`
 2. **Description**:
    ```
-   Interac e-Transfer support guide: how to send, request, and receive money, Autodeposit, sending limits by account tier, fees, delivery times, security best practices, and FAQs. Answer all e-Transfer questions using this document as the primary source.
+   Interac e-Transfer how-to and policy guide: how to send, request, and receive money; how Autodeposit works; security and fraud-awareness best practices; and troubleshooting / FAQs. Use this ONLY for explanatory "how does it work" questions. Do NOT use it for specific limit amounts, fees, or delivery estimates — those are calculated by the "eTransfer Limits & Fees" tool.
    ```
 3. Click **Save**.
 
@@ -131,9 +130,12 @@ Instead of hosting an external service, we build the limits/fees logic as a **no
    <img width="1346" height="816" alt="Add a tool" src="https://github.com/user-attachments/assets/f52c3f5d-9661-4559-8ae1-45c070103fd4" />
 
 2. Under **Create**, choose **Agentic workflow** → **Start Building**.
-   <img width="1346" height="816" alt="Screenshot 2026-09-08 at 10 10 59 PM" src="https://github.com/user-attachments/assets/8c43827e-e552-4e47-a597-9e3b8923b015" />
+   <img width="1346" height="816" alt="Screenshot 2026-09-08 at 10 10 59 PM" src="https://github.com/user-attachments/assets/8c43827e-e552-4e47-a597-9e3b8923b015" />
 
-3. Name it `eTransfer Limits & Fees` with the description: *"Checks Interac e-Transfer sending limits, fees, and estimated delivery time by account tier."*
+3. Name it `eTransfer Limits & Fees` with the description:
+   ```
+   Calculates the exact Interac e-Transfer sending limit, fee, and estimated delivery time for a given account tier, and checks whether a specific amount is allowed. Use this for ANY question about limits, fees, how much can be sent, whether a specific dollar amount is allowed, or how long a transfer takes — these must be computed, not retrieved from the knowledge base. Requires account_tier, transfer_type, and amount.
+   ```
 
 #### 3.2 Define the inputs
 Click **0 inputs** at the top of the flow, then click **Add** for each parameter (the agent fills these from the customer's question):
@@ -202,7 +204,7 @@ In the Logic block's **Outputs** tab, add these outputs — the names must match
 
 #### 3.5 Save and test
 1. Click **Done** (top right) to save the workflow. It appears in the agent's **Toolset** as `eTransfer Limits & Fees` (if it isn't there, add it via **Tools → Add tool → Local instance**).
-2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, ask e.g. *"I have a Personal Basic account, can I send $2,500 in one e-Transfer, and is there a fee?"* and confirm the agent calls the tool and returns the correct limit/fee.<img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
+2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, ask e.g. *"I have a Personal Basic account, can I send $2,500 in one e-Transfer, and is there a fee?"* and confirm the agent calls the tool and returns the correct limit/fee.<img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
 
 
 > The exact node names in the flow builder can vary by version — use the **Decision/branch** steps for the tier logic and a final **response / set-output** step. Confirm labels in your environment.
@@ -216,10 +218,10 @@ Scroll to the **Behavior** section and add these instructions:
 You are an Interac e-Transfer support assistant. You operate exclusively within the Interac e-Transfer domain. Be clear, concise, and friendly.
 
 1. e-Transfer Information & Knowledge Base
-For how e-Transfer works — sending, requesting, or receiving money, Autodeposit, delivery times, fees, security, or troubleshooting — retrieve answers from the eTransfer-knowledge knowledge base.
+For how e-Transfer works — sending, requesting, or receiving money, how Autodeposit works, security, or troubleshooting — retrieve answers from the eTransfer-knowledge knowledge base. Use it ONLY for how-it-works, policy, security, and troubleshooting — never for specific limit amounts, fees, or delivery times.
 
 2. Limits, Fees, and Delivery (Tool)
-When a customer asks whether a transfer is allowed, how much it costs, or how long it takes, use the "eTransfer Limits & Fees" workflow with:
+When a customer asks whether a transfer is allowed, how much it costs, or how long it takes, you MUST use the "eTransfer Limits & Fees" workflow — never quote a limit, fee, or delivery time from the knowledge base or from memory. Call it with:
 - transfer_type: "send money", "request money", or "autodeposit"
 - amount: transfer amount in CAD
 - account_tier: "personal basic", "personal premium", or "small business"
@@ -253,8 +255,8 @@ Standards: all amounts in CAD; only answer within the Interac e-Transfer domain;
    <img width="1309" height="793" alt="11" src="https://github.com/user-attachments/assets/84eeebc1-ae3d-4ddd-a875-fff08d4300b7" />
 
 
-4. Ask ** questions to the deployed agent so monitoring has data (mix knowledge, tool, and a fraud scenario), e.g.:
-   
+4. Ask a few questions to the deployed agent so monitoring has data (mix knowledge, tool, and a fraud scenario), e.g.:
+
    ```
    How do I send an Interac e-Transfer?
    ```
@@ -265,7 +267,7 @@ Standards: all amounts in CAD; only answer within the Interac e-Transfer domain;
    I have a Personal Premium account and want to send $8,000 in one transfer. Is that allowed?
    ```
 
-#### 5.2 View the monitoring dashboard
+#### 4.2 View the monitoring dashboard
 After deploying and asking a few questions, click the **watsonx Orchestrate** logo (top-left) to return to the home page. You now land on a monitoring dashboard that summarizes every agent you've deployed.
 
    <img width="1309" height="793" alt="13" src="https://github.com/user-attachments/assets/70918329-6260-4f8f-899a-9c739bfd6d9d" />
@@ -286,4 +288,4 @@ For this lab, stay on **Overview** and point out the **Deployment status** (your
 
 ## Conclusion
 
-**Congratulations!** You built, deployed, and monitored an **Interac e-Transfer Support Agent** in watsonx Orchestrate — combining RAG for support knowledge with a limits/fees tool built using the no-code Agentic workflow builder. The key takeaway is how to **evaluate, monitor, and govern** an AI agent in production so it operates reliably, transparently, and in line with business goals.
+**Congratulations!** You built, deployed, and monitored an **Interac e-Transfer Support Agent** in watsonx Orchestrate — combining RAG for support knowledge with a limits/fees tool built using the no-code Agentic workflow builder.
