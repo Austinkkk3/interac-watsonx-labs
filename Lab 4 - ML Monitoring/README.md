@@ -44,7 +44,7 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
    ![New project](images/project_2.png)
    ![Name project](images/3.png)
 
-3. In the project → **Manage → Services & Integrations → Associate service** → select **watsonx.ai Runtime** → **Associate**.
+3. In the project → **Manage → Services & Integrations → Associate service** → select **watsonx.ai Runtime** → **Associate**. Create a new service if no option available to select.
 
    ![Associate service](images/4.1.png)
    ![Select runtime](images/4.2.png)
@@ -88,12 +88,16 @@ The notebook is pre-built and validated — **no code changes needed**.
 
 3. Insert your **project access token** and the **Space GUID** from Step 1.
 
-   ![Insert token and space id](images/7.2.png)
+   <img width="1470" height="830" alt="Screenshot 2026-09-16 at 4 44 48 PM" src="https://github.com/user-attachments/assets/3eab0862-0fac-4cba-a52d-ae14a6bcfeff" />
+   <img width="1470" height="830" alt="Screenshot 2026-09-16 at 4 45 14 PM" src="https://github.com/user-attachments/assets/d857cc19-6e46-4688-bfbd-38e0f5161786" />
 
-4. **Run → Run All Cells.** This trains and deploys the LightGBM model (`demand_forecasting_lgbm`) to `bootcamp_gov`.
+
+5. **Run → Run All Cells.** This trains and deploys the LightGBM model (`demand_forecasting_lgbm`) to `bootcamp_gov`.
    - 📌 Note the **RMSE** the notebook prints — you'll use it as a Quality threshold in Part B.
 
-   ![Run all cells](images/8.png)
+   <img width="1469" height="829" alt="Screenshot 2026-09-16 at 4 45 27 PM" src="https://github.com/user-attachments/assets/63c9644f-59c5-4873-aa63-7953ed3d9196" />
+   <img width="1470" height="830" alt="Screenshot 2026-09-16 at 4 54 56 PM" src="https://github.com/user-attachments/assets/e5e62bac-6410-4375-a09d-7e1c3b0765cd" />
+
 
 ### Step 4: Verify the deployment
 
