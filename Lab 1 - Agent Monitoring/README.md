@@ -163,12 +163,46 @@ tiers = {
     "small business":   {"limit": 25000, "fee": 1.50},
 }
 
-tier = (account_tier or "").strip().lower()
+
+try:
+    raw_account_tier = self.account_tier
+except AttributeError:
+    raw_account_tier = ""
+
+try:
+    raw_transfer_type = self.transfer_type
+except AttributeError:
+    raw_transfer_type = ""
+
+try:
+    raw_amount = self.amount
+except AttributeError:
+    raw_amount = 0
+
+try:
+    raw_autodeposit = self.recipient_has_autodeposit
+except AttributeError:
+    raw_autodeposit = False
+
+
+tier = (raw_account_tier or "").strip().lower()
+ttype = (raw_transfer_type or "").strip().lower()
+
+if raw_amount is None:
+    amount = 0
+else:
+    try:
+        amount = float(raw_amount)
+    except (ValueError, TypeError):
+        amount = 0
+
+recipient_has_autodeposit = bool(raw_autodeposit) if raw_autodeposit is not None else False
+
+
 info = tiers.get(tier, {"limit": 0, "fee": 0.00})
 per_transaction_limit = info["limit"]
 
 # Requesting money is always free; otherwise use the tier's send fee
-ttype = (transfer_type or "").strip().lower()
 fee = 0.00 if ttype == "request money" else info["fee"]
 
 # Is the transfer within the per-transaction limit?
@@ -181,13 +215,6 @@ elif ttype == "request money":
     estimated_delivery = "Sent immediately; funds arrive after the other party approves."
 else:
     estimated_delivery = "Typically within 30 minutes after the recipient accepts and answers the security question."
-
-return {
-    "within_limit": within_limit,
-    "per_transaction_limit": per_transaction_limit,
-    "fee": fee,
-    "estimated_delivery": estimated_delivery,
-}
 ```
 
 #### 3.4 Define the outputs
