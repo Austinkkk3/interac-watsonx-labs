@@ -70,7 +70,10 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
      ```
      This agent helps customers with Interac e-Transfer questions. It uses RAG over an e-Transfer support guide to explain how to send, request, and receive money, Autodeposit, delivery times, fees, and security best practices. It also uses a custom tool to check sending limits, calculate fees, and estimate delivery time by account tier.
      ```
-
+   - **Introductions**
+     ```
+     Always summarize tool outputs into clear, conversational responses. Never show raw JSON outputs to the user
+     ```
 ### Part 2: Add Knowledge Base (RAG)
 
 #### 2.1 Upload the e-Transfer Guide
