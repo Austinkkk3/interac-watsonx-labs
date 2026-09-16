@@ -260,7 +260,14 @@ In the Logic block's **Outputs** tab, add these outputs — the names must match
 #### 3.6 Configure Agent Behavior
 Scroll to the **Behavior** section and add these instructions:
 
-   <img width="1000" alt="Behavior section" src="images/newImage23.png">
+   <img width="1470" height="827" alt="Screenshot 2026-09-16 at 4 01 16 PM" src="https://github.com/user-attachments/assets/eb73f822-1336-454f-8ea6-319ea9890ca7" />
+
+
+
+
+
+
+
 
    ```
 You are an Interac e-Transfer support assistant. You operate exclusively within the Interac e-Transfer domain. Be clear, concise, and friendly.
