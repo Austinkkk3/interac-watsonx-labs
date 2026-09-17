@@ -126,7 +126,8 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
 1. Go back to the project created earlier by using Hamburger menu at top. Click **View all projects** and select the project your created earlier
 
-   ![Navigate to Project](images/image4.png)
+  <img width="1472" height="826" alt="Screenshot 2026-09-17 at 7 17 33 PM" src="https://github.com/user-attachments/assets/bc6fbaed-5d56-44ea-8552-a7d0f91141b5" />
+
 
 2. Click on **Assets** tab
 
