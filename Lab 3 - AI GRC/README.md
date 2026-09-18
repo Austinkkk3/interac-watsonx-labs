@@ -5,7 +5,7 @@
 
 <img alt="AskHR" src="assets/hr_landscape.jpg">
 
-## You need a separate Lab environment from IBM. Please contact IBM team if you want to try it.
+## You need a separate Lab environment from IBM. Please refer to the document provided by IBMers.
 
 ## 👋 Meet Jose – The Chief Risk Officer
 
