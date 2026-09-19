@@ -70,7 +70,7 @@ A simple, structured process for managing AI models from idea to remediation.
 
 ## 🚀 Getting Started
 
-1. Login to [IBM Cloud](https://cloud.ibm.com)
+1. Login to the OpenPages Link IBMers provided
 2. Navigate to **Resource List > AI / Machine Learning**
 3. Launch the **OpenPages** instance from the list.
    *If you receive an authorization error, add **/app/jspview/react/grc/dashboard/Home** to the end of the URL.*
