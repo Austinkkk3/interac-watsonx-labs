@@ -130,7 +130,7 @@ In **IBM OpenPages**, a **Business Entity**:
    | --------------------------- | ------------------------------------ |
    | **Name** *(required)*       | `Techcorp`                           |
    | **Description**             | Parent entity representing Techcorp. |
-   | **Executive Owner**         | Search for your name and select it (System Administrator)   |
+   | **Executive Owner**         | Search for your name and select it (Pick "System Administrator" this time)   |
    | **Entity Type**             | As applicable                        |
    | **Primary Business Entity** | *(leave empty — this is the parent)* |
 
@@ -150,7 +150,7 @@ In **IBM OpenPages**, a **Business Entity**:
    | --------------------------- | -------------------------------------------------------- |
    | **Name** *(required)*       | `AskHR - GenAI`                                          |
    | **Description**             | Child entity for the GenAI use case under AskHR project. |
-   | **Executive Owner**         | Search for your name and select it                       |
+   | **Executive Owner**         | Search for your name and select it (Pick "System Administrator" this time)                       |
    | **Entity Type**             | As applicable                                            |
    | **Primary Business Entity** | Select `Techcorp` (see below).                           |
 
