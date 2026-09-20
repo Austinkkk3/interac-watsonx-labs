@@ -246,64 +246,88 @@ On the **New AI Use Case** form (the right-side **Task guidance** panel is title
 <!-- 📸 Screenshot placeholder — Action menu "Start Model Use Case Request - Initial Review" + confirmation dialog -->
 <img width="800" alt="Start Model Use Case Request" src="assets/hands_on_lab_images/usecase6.png">
 
-#### 7️⃣ Attach a Risk / Compliance Questionnaire Assessment
+#### 7️⃣ Attach & Complete a Risk / Compliance Questionnaire Assessment
 
 Scroll down on the use case record to the **Risk and Compliance** section and open the **Questionnaire Assessments** tab. From here you can:
+
+<img width="1473" height="826" alt="Screenshot 2026-09-20 at 10 50 34 AM" src="https://github.com/user-attachments/assets/f557926a-eb98-410b-8161-541224e7477c" />
+
 
 * **Link Existing Questionnaires** — attach a pre-existing assessment (e.g., *AI Use Case Risk*).
 * **Add New Questionnaire** — create a new assessment from a template.
 * **Copy Questionnaire Assessment** — clone an existing one.
 
-For this lab, click **Link Existing Questionnaires**, pick a questionnaire (for example **`1 AI Use Case Risk_QA_...`** / *AI Use Case Onboarding Risk*), and click **Done**. The linked questionnaire appears in the table with its **Progress %, Risk Score, and Compliance Score**, plus a **Launch** link to open and complete it.
+For this lab, click **Add New Questionnaire**. In the **Select Questionnaire Template dialog**, choose a template — for example **`AI System Information Gathering`** (*AI Onboarding Questionnaire*) — click **Done**, then **Save**.
+<img width="1330" height="826" alt="Screenshot 2026-09-20 at 10 55 18 AM" src="https://github.com/user-attachments/assets/a3de41ab-deeb-4cc5-ae7f-f4dc8c0c7b73" />
 
-> 🔀 **What changed:** In the new UI the Risk & Applicability questionnaires are **not auto-generated** when you submit the use case. You attach them from **Risk and Compliance → Questionnaire Assessments** on the use case record (Link / Add / Copy). To fill one out, click **Launch** on its row. The exact questions in your environment's templates may differ from the older fixed questionnaires.
+ After **Save** click **Launch Questionnaire UI** in the next page
+ <img width="1330" height="826" alt="questionnaire" src="https://github.com/user-attachments/assets/2427534d-03ca-44b9-bebf-55737ddb0a0c" />
 
-<!-- 📸 Screenshot placeholder — Risk and Compliance > Questionnaire Assessments with a linked questionnaire (Launch link) -->
-<img width="800" alt="Link questionnaire assessment" src="assets/hands_on_lab_images/usecase7.png">
+**Completing the questionnaire**<img width="1444" height="826" alt="Screenshot 2026-09-20 at 11 07 50 AM" src="https://github.com/user-attachments/assets/6ed3c97d-71b4-4fad-9978-c78695560126" />
+Use the **View all questions** dropdown and switch it to **View incomplete questions** to work through only what's left. Answer each question (radio buttons, checkboxes, or text fields), then click **Save draft**.
+
+> 💡 **Tip:** Some answers reveal **conditional follow-up questions** (e.g., answering *Yes* to "Does the AI system replace another type of system?" adds a *"Why does that system need to be replaced?"* text field), so the total question count grows as you go. **View incomplete questions** makes it easy to catch them all.
+
+
+
+> 🔀 **What changed:** In the new UI the Risk & Applicability questionnaires are **not auto-generated** when you submit the use case. You attach them from **Risk and Compliance → Questionnaire Assessments** on the use case record (**Add New** / **Link Existing** / **Copy**), then click **Launch** (or the **Questionnaire** tab) to complete them. The available templates and their questions differ from the older fixed questionnaires — the example below uses the **AI System Information Gathering** template.
 
 <details>
-<summary>📋 Reference — sample answers (if the AI Use Case Risk Identification questionnaire is available to fill via <b>Launch</b>)</summary>
+<summary>📋 Reference — sample answers for the <b>AI System Information Gathering</b> questionnaire (AskHR Agentic-AI use case)</summary>
 
-##### AI Use case risk identification section
+> Illustrative answers for this lab. Items marked ↳ are **conditional follow-ups** that appear only after the parent question is answered. Identity/free-text answers are examples — substitute your own.
 
-| Question                                                     | Answer         |
-|--------------------------------------------------------------|----------------|
-| Please describe the problem you're solving with AI.          | Building assistant to answer HR related questions. |
-| Please describe the expected users of the model.             | Fulltime employees in the org in engineering, sales and HR domain |
-| Are you planning to use generative AI model(s)?              | Yes            |
-| Are you planning to use agentic AI?                          | Yes            |
-| Will the model input include content provided by people?     | Yes            |
-| Will the model input include personal information?           | Yes            |
+##### Section 1 — Jurisdiction and Compliance
 
-##### Agentic AI Use Case Risk Identification
+| Question | Answer |
+|----------|--------|
+| Does this use case involve algorithmic decision tools or an AI model/system (ML, logic-/knowledge-based, or statistical)? | Yes |
+| Will the tool/model/system be placed on the market or put into service in the European Union? | No |
+| Will it be sold to, deployed in, or provide services to users in the United States? | No |
+| Will it be sold to, deployed by, or provide services on behalf of the Canadian Federal government? | No |
+| Could it exploit vulnerabilities of a specific group (age, disability) to distort behavior and cause harm? | No |
+| Will the model deploy subliminal techniques to distort behavior and cause harm? | No |
+| Will the use case propose/classify the trustworthiness of persons (social scoring)? | No |
+| Will it perform 'real-time' remote biometric identification in public spaces for law enforcement? | No |
+| How are you? | Not applicable |
+| Who is your manager? | *(pick/enter a user, e.g. your manager)* |
 
-| Question                                                                 | Answer |
-|--------------------------------------------------------------------------|--------|
-| Does the agent make decisions that affect people?                        | Yes    |
-| Does the use case require a person to work together with the agent?      | Yes    |
-| Does the person make the final say on the agent's decisions/actions?     | Yes    |
-| Is the agent being used for a different purpose than intended?           | No     |
-| Is the agent expected to align with human values, ethics, or policies?   | Yes    |
-| Do the agent's tasks require planning or revisiting actions?             | Yes    |
-| Does the agent use other agents, tools, or resources?                    | Yes    |
-| Can these tools/agents contain sensitive information?                    | No     |
-| Do the agent's actions create, update, or delete content?               | No     |
-| Are the agent's outputs used by other tools or agents?                  | No     |
-| Is the agent's output observable by the user?                            | Yes    |
-| Will an end user supply inputs to the agent?                             | Yes    |
-| Will end users include people who may attack or misuse the agent?        | No     |
-| Are any tools/agents used by the agent external to the organization?     | No     |
+##### Section 2 — Objective and proportionality
 
-##### Applicability / Compliance Assessment
+| Question | Answer |
+|----------|--------|
+| Is personal data processed by the system? | Yes |
+| Is the objective (purpose) of the processing clearly defined? | Yes |
+| Are the learning and production phases of the AI system separate? | Yes |
+| ↳ If so, is a second assessment planned for the production phase? | No |
+| Are the individuals who interact with the system / are subject to automated decisions identified? | Yes |
+| ↳ What are their characteristics (age, gender, physical details, etc.)? | e.g. "Full-time employees (adults, 18+) across engineering, sales, and HR." |
+| ↳ How many of them are there? | e.g. "Approximately 5,000 employees" |
+| Will the processing result in legal, financial or physical consequences for health, social status or safety? | No |
+| Does the AI system replace another type of system for the task it is assigned? | Yes |
+| ↳ Why does that system need to be replaced? | e.g. "The manual HR support process was slow and inconsistent; the AI assistant is faster, 24/7, and consistent." |
+| Does the AI system have a significant advantage (efficiency, cost, privacy, etc.) vs. other solutions? | Yes |
+| Does this significant advantage outweigh the potential additional risks? | Yes |
 
-| Question                                                                       | Answer                                                                 |
-|--------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| How would you classify your organization?                                      | None of the Above                                                     |
-| The AI System may be out of scope – contact your Compliance Department...      | I confirm that I will contact the Compliance Department for guidance. |
+##### Section 2 — Providers, users of AI systems and individuals
 
-> After answering, use **Actions → Submit and close** within the questionnaire UI.
+| Question | Answer |
+|----------|--------|
+| If personal data is collected/used, has a data controller been identified? | Yes |
+| Are the legal persons in charge of AI system development, deployment and monitoring clearly defined? | Yes |
+| Do the natural persons in charge of development have the appropriate training? | Yes |
+| Have they been made aware of the legal, technical, ethical and moral issues of AI? | Yes |
+| Is there an internal charter or policy governing the design and deployment of AI systems? | Yes |
+| Are the individuals in charge of maintaining/correcting the AI system clearly identified and known to everyone? | Yes |
+| What is your tenure in the organization? | 10+ Years |
+
+> After answering all questions, click **Save draft** (and, when required by your workflow, use **Actions → Submit** on the assessment record).
 
 </details>
+
+You will be able to see **Risk Score** and **Compliance Score** after finish the questionnaire
+
+<img width="1400" height="800" alt="Screenshot 2026-09-20 at 11 12 53 AM" src="https://github.com/user-attachments/assets/8135dfb7-e317-4942-ae0c-e4496a845247" />
 
 #### 8️⃣ Associate a Mandate / Regulation
 
