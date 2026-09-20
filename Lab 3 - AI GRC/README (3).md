@@ -331,12 +331,18 @@ You will be able to see **Risk Score** and **Compliance Score** after finish the
 
 #### 8️⃣ Associate a Mandate / Regulation
 
-On the use case record, in the **Risk and Compliance** section, open the **Regulations** tab and click **Link Regulations**. Search for and select an appropriate mandate (for example **`12 CFR 225.8`**), then click **Done**.
+On the use case record, in the **Risk and Compliance** section, 
+<img width="2984" height="1686" alt="image" src="https://github.com/user-attachments/assets/c63eacf9-02d6-4e1d-a461-d5e379bdadd6" />
 
-> 🔀 **What changed:** The old "regulatory information → mandates → Add" step is now **Risk and Compliance → Regulations → Link Regulations**. (These entries live under *Library → RCA Library → Mandates* in the picker, so they are the same mandates.)
+open the **Regulations** tab and click **Link Regulations**. Search for and select an appropriate mandate (for example **`12 CFR 225.8`**), then click **Done**.
+<img width="1492" height="843" alt="image" src="https://github.com/user-attachments/assets/b81b1ed8-4cfa-459d-9f29-d20f3db6be9f" />
 
-<!-- 📸 Screenshot placeholder — Regulations tab with Link Regulations picker / linked regulation -->
-<img width="800" alt="Link a mandate/regulation" src="assets/hands_on_lab_images/usecase52.png">
+
+> **Why these two steps matter**
+>
+> Completing the **questionnaire assessment** is how the use case owner surfaces the risk and compliance profile of the AI system. By answering structured questions about jurisdiction, data usage, agentic behavior, and accountability, the questionnaire automatically calculates a **Risk Score** and **Compliance Score**, flags potentially prohibited or high-risk practices, and creates a documented, auditable record of the system's characteristics — so decisions about the model aren't based on assumptions, but on a consistent, repeatable evaluation.
+>
+> **Associating a regulation (mandate)** establishes a formal link between the AI use case and the specific laws and regulatory obligations it must comply with (e.g., GDPR, the EU AI Act). This provides end-to-end **traceability** — anyone reviewing the use case can immediately see which regulations apply — and connects the use case to the related controls, requirements, and policies needed to satisfy those regulations. Together, the questionnaire and the mandate association keep the initiative **audit-ready** and enable risk and compliance reporting across the AI portfolio.
 
 > ℹ️ **On per-risk review:** In the previous version the owner reviewed each generated risk and set its **Status = Approved** (Admin tab) before submitting for stakeholder review. In the new workflow, the review/approval is handled as a single workflow decision (see Section 2), so this per-risk status step is no longer required for the lab.
 
@@ -356,18 +362,21 @@ As a Business Stakeholder, your input ensures the use case aligns with business 
 
 #### 📝 Task Summary
 
-The use case **"AskHR Automation using Agentic AI"** is now at the **`Model Use Case Review`** workflow stage. As the reviewer, your job is to **approve, reject, or return** it.
+The use case **"AskHR Automation using Agentic AI"** is now at the **`Model Use Case Review`** workflow stage, with a status of **`Awaiting Approval`**. As the reviewer, your job is to **approve, reject, or return** it.
 
-#### 1️⃣ Open the Assigned Task
+#### 1️⃣ Open the Use Case Under Review
 
-* Go to the **Home** page and open the **My Tasks** tab.
-* Find the task for your use case. You can narrow the list with **Filter By: Workflow Name / Stage / Type** (columns: *Name, Type, Workflow Name, Stage (Status), Criticality, Stage Due Date*).
-* Click the task to open the use case record.
+Open the use case record directly from the inventory:
 
-  > 💡 You can also open the use case directly from **Inventory → AI Use Cases** — the review actions are the same.
+* Go to **Inventory → AI Use Cases**.
+* If the grid looks empty or unexpectedly short, **clear the search box first** — a leftover keyword (e.g. `ASK`) plus the *Default Filter* can hide the record you just created.
+* Locate **`AskHR Automation using Agentic AI`** (Status = **Awaiting Approval**) and click its name to open the record.
 
-<!-- 📸 Screenshot placeholder — Home > My Tasks list with the AskHR review task -->
-<img width="800" alt="My Tasks" src="assets/hands_on_lab_images/Risk11.png">
+> ⚠️ **Heads-up — don't hunt for this under Home → My Tasks.**
+> In this environment the **My Tasks / Subscription Tasks** dashboard widgets only surface a fixed set of object types (Audit, Control, Issue, Business Continuity Plan, Risk Assessment, Model, etc.). **AI Use Case review tasks are *not* listed there**, so the review is driven from the **use case record itself**, not from the task dashboard. Opening it from **Inventory → AI Use Cases** is the reliable path — the Actions available on the record are the same review actions.
+
+<!-- 📸 Screenshot placeholder — Inventory > AI Use Cases with the AskHR record (Status = Awaiting Approval) -->
+<img width="800" alt="AI Use Cases inventory" src="assets/hands_on_lab_images/Risk11.png">
 
 #### 2️⃣ Review the key details
 
@@ -378,18 +387,18 @@ Review the use case before deciding:
 * **Questionnaire Assessment** (Progress / Risk Score / Compliance Score)
 * **Associated Regulations / Mandates**
 
-<!-- 📸 Screenshot placeholder — use case record under review (Status = Proposed, Risk Level = Medium) -->
+<!-- 📸 Screenshot placeholder — use case record under review (Status = Awaiting Approval, Risk Level = Medium) -->
 <img width="800" alt="Review use case" src="assets/hands_on_lab_images/Risk13.png">
 
-#### 3️⃣ Approve or Reject the Use Case
+#### 3️⃣ Approve, Reject, or Return the Use Case
 
 Click the **Actions** button (top-right) and choose one of the workflow actions:
 
-| Action                                    | What it does                                                     |
-| ----------------------------------------- | ---------------------------------------------------------------- |
+| Action                                        | What it does                                                            |
+| --------------------------------------------- | ----------------------------------------------------------------------- |
 | ✅ **Approve - Send Onboarding Questionnaire** | Approves the use case and advances the workflow. Status → **Approved**. |
-| ❌ **Reject Use Case**                     | Rejects the use case.                                           |
-| 🔁 **Return to Requestor for Updates**    | Sends it back to the Use Case Owner for revision.              |
+| ❌ **Reject Use Case**                         | Rejects the use case.                                                    |
+| 🔁 **Return to Requestor for Updates**        | Sends it back to the Use Case Owner for revision.                        |
 
 Confirm your choice in the **"Are you sure you want to perform this action?"** dialog by clicking **Continue**.
 
@@ -400,13 +409,29 @@ Confirm your choice in the **"Are you sure you want to perform this action?"** d
 
 ## 🎯 After You Submit
 
-| If Approved                                | If Rejected / Returned                 |
-| ------------------------------------------ | -------------------------------------- |
-| Use case **Status → Approved**             | Sent back to the Use Case Owner        |
-| Proceeds to onboarding / downstream steps  | Requires updates and resubmission      |
+| If Approved                               | If Rejected / Returned          |
+| ----------------------------------------- | ------------------------------- |
+| Use case **Status → Approved**            | Sent back to the Use Case Owner |
+| Proceeds to onboarding / downstream steps | Requires updates and resubmission |
 
 <!-- 📸 Screenshot placeholder — use case record showing Status = Approved -->
 <img width="800" alt="Use case approved" src="assets/hands_on_lab_images/usecase_approved.png">
+
+## 🧭 Why the Business Unit Leader Makes This Call
+
+This review gate is deliberately placed with the Business Unit Leader / Business Stakeholder — not with the team that built the use case — for reasons that sit at the heart of AI governance:
+
+* **Separation of duties.** The people who request and build an AI use case should not be the ones who approve it for themselves. Assigning the decision to an independent business leader turns the review into a real control rather than a self-signed rubber stamp — a core expectation of model-risk frameworks (e.g., SR 11-7) and AI regulations such as the EU AI Act.
+
+* **Business alignment and risk-appetite ownership.** Technical teams can confirm that a model *works*; only a business leader can confirm that it *should exist* — that it supports the business strategy, addresses a genuine need, and stays within the level of risk the business is willing to accept. HR automation in particular touches employees and hiring decisions, so a business owner must weigh whether the value justifies the exposure.
+
+* **Formal risk acceptance and accountability.** Approving the use case is an explicit acceptance of its residual risk by someone with the authority to own the consequences. That accountability is what allows the use case to move into development with confidence, and it gives auditors and regulators a named, responsible decision-maker.
+
+* **A documented, auditable decision point.** The Approve / Reject / Return action, together with the confirmation dialog, records *who* decided *what* and *when*. This audit trail is far stronger than an informal email sign-off and is exactly the evidence internal audit, compliance, and external regulators expect to see.
+
+* **A genuine gate, not a formality.** Because the reviewer can **Return for updates** or **Reject** outright, low-value, non-compliant, or high-risk use cases are stopped *before* they consume development effort or reach production. This keeps ungoverned AI out of the enterprise and focuses resources on use cases that have cleared business and risk scrutiny.
+
+In short, the Business Unit Leader converts a technical artifact into a **governed business decision** — ensuring that every AI use case which proceeds is wanted by the business, understood in terms of risk, owned by an accountable leader, and documented for anyone who later asks *"who approved this, and why?"*
 
 #### 🎉 Congratulations!
 
