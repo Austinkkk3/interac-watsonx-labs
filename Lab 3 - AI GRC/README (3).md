@@ -130,7 +130,7 @@ In **IBM OpenPages**, a **Business Entity**:
    | --------------------------- | ------------------------------------ |
    | **Name** *(required)*       | `Techcorp`                           |
    | **Description**             | Parent entity representing Techcorp. |
-   | **Executive Owner**         | Search for your name and select it   |
+   | **Executive Owner**         | Search for your name and select it (System Administrator)   |
    | **Entity Type**             | As applicable                        |
    | **Primary Business Entity** | *(leave empty — this is the parent)* |
 
