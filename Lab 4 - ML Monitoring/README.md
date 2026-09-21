@@ -41,7 +41,8 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
 
 2. **☰ Menu → Projects → New project**, name it `interac-ai-gov`.
 
-   ![Projects](images/project_1.png)
+  <img width="1358" height="792" alt="image" src="https://github.com/user-attachments/assets/48ddf015-8cf2-4d23-bcdf-9b8e5a5d0c02" />
+
    ![New project](images/project_2.png)
    ![Name project](images/3.png)
 
