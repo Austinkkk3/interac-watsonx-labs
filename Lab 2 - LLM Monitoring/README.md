@@ -58,6 +58,7 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
    ![IBM Cloud Login](images/image2.png)
    ![IBM Cloud Region](images/image3.png)
+<img width="1231" height="813" alt="image" src="https://github.com/user-attachments/assets/231c3414-141c-4351-9aa9-47c3e2e726e6" />
 
 ---
 
