@@ -52,9 +52,12 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
 ### Part 1: Create the e-Transfer Agent in watsonx Orchestrate
 
 #### 1.1 Access watsonx Orchestrate
-1. Go to IBM Cloud (https://cloud.ibm.com) in the correct account.
-2. **Resource list** → **AI / Machine Learning** → **watsonx Orchestrate** → **Launch watsonx Orchestrate**.
-3. Click the hamburger menu (☰) and select **Build**.
+1. Go to IBM Cloud (From your email - Click **Join now**
+
+   <img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/b622e445-6d12-447a-8270-16b0aa06dbab" />
+
+3. **Resource list** → **AI / Machine Learning** → **watsonx Orchestrate** → **Launch watsonx Orchestrate**.
+4. Click the hamburger menu (☰) and select **Build**.
 
    <img width="1000" alt="Build menu" src="images/pic6.png">
 
