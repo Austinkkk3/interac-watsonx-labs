@@ -52,7 +52,7 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
 ### Part 1: Create the e-Transfer Agent in watsonx Orchestrate
 
 #### 1.1 Access watsonx Orchestrate
-1. Go to IBM Cloud (From your email - Click **Join now**
+1. Go to IBM Cloud (From your email - Click **Join now**）
 
    <img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/b622e445-6d12-447a-8270-16b0aa06dbab" />
 
