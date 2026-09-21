@@ -129,7 +129,7 @@ The notebook is pre-built and validated — **no code changes needed**.
    ![Upload training data](images/16.png)
    ![Delimiter](images/17.png)
    ![Features](images/18.png)
-   ![Features continued](images/19.png)
+   <img width="1470" height="820" alt="Screenshot 2026-09-21 at 3 00 38 PM" src="https://github.com/user-attachments/assets/85e26cd6-cb97-482d-818b-11bdb3b1642b" />
    ![Model output](images/20.png)
    ![Prediction column](images/21.png)
    ![Review](images/22.png)
