@@ -160,13 +160,11 @@ In **IBM OpenPages**, a **Business Entity**:
 
 4. ✅ Ensure **Techcorp** is listed as the **Primary Business Entity**, then click **Save**.
 
-<!-- 📸 Screenshot placeholder — New Business Entity form for AskHR - GenAI with Primary Business Entity = Techcorp -->
-<img width="800" alt="Create AskHR - GenAI child entity" src="assets/hands_on_lab_images/child_entity.png">
+
 
 > ✅ **Verify:** After saving, the child entity record shows its **Folder** as **`Techcorp / AskHR - GenAI`**, confirming the parent/child hierarchy. (You can also create a child directly from the Techcorp record's **Child Business Entity → New Business Entity** button.)
 
-<!-- 📸 Screenshot placeholder — AskHR - GenAI record showing Folder "Techcorp / AskHR - GenAI" -->
-<img width="800" alt="Child entity hierarchy confirmed" src="assets/hands_on_lab_images/entity_hierarchy.png">
+
 
 👏 **Well Done!** Structured Business Entities set a strong foundation for scalable, transparent, and well-governed AI initiatives.
 
@@ -414,8 +412,7 @@ Confirm your choice in the **"Are you sure you want to perform this action?"** d
 | Use case **Status → Approved**            | Sent back to the Use Case Owner |
 | Proceeds to onboarding / downstream steps | Requires updates and resubmission |
 
-<!-- 📸 Screenshot placeholder — use case record showing Status = Approved -->
-<img width="800" alt="Use case approved" src="assets/hands_on_lab_images/usecase_approved.png">
+
 
 ## 🧭 Why the Business Unit Leader Makes This Call
 
