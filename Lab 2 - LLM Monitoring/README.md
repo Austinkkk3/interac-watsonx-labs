@@ -1,5 +1,7 @@
 # Lab 2: Interac e-Transfer Dispute Summarization with watsonx.governance (~45 min)
 
+> **In this lab** you'll take a generative-AI summarization prompt and put it to work on Interac e-Transfer disputes — turning messy customer narratives into short, consistent summaries. You'll deploy the prompt, measure its output quality with objective metrics (ROUGE and BLEU), and then govern it through Model Health and an automatically generated AI Factsheet. **By the end, you'll know how to move a GenAI feature from "it looks fine" to measurable and audit-ready — the bar you have to clear before putting generative AI into a regulated workflow.**
+
 > **Interac watsonx Enablement Workshop.** Scenarios, personas, and data in this lab are fictional and for demonstration only.
 
 ## Use Case: Interac e-Transfer Dispute Summarization
