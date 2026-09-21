@@ -54,7 +54,7 @@ Evaluations metrics for prompts or models, e.g. Rouge, BLEU.
 
 ## Getting Started
 
-1. Navigate to Watsonx.ai using IBM Cloud. Use [link](https://dataplatform.cloud.ibm.com/wx/home?context=wx). Make sure that you are in correct account and check that US(Dallas) is selected as the location. Your environment will be named something like "watsonx-events2".
+1. Navigate to Watsonx.ai using IBM Cloud. Make sure that you are in correct account and check that US(Dallas) is selected as the location. Your environment will be named something like "watsonx-events-001".
 
    ![IBM Cloud Login](images/image2.png)
    ![IBM Cloud Region](images/image3.png)
