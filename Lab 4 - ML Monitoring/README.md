@@ -1,5 +1,7 @@
 # Lab 4: Interac Transaction-Volume Forecasting Governance with Watson OpenScale (~50 min)
 
+> **In this lab** you'll govern a production machine-learning model — a gradient-boosted model that forecasts Interac e-Transfer transaction volume — using Watson OpenScale. You'll deploy the model from a notebook, configure three monitors (Quality, Drift, and Explainability), then run a live evaluation and read the risk report. Watch for the moment the evaluation trips a **drift alert** — that's the whole point: OpenScale catching a model quietly degrading before it can affect capacity planning or settlement. **By the end, you'll know how to keep a classic ML model accurate, explainable, and audit-ready long after it goes live.**
+
 > **Interac watsonx Enablement Workshop.** Scenarios, personas, and data in this lab are fictional and for demonstration only.
 
 ## What you'll do
