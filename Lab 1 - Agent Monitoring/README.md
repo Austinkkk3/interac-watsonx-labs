@@ -1,10 +1,9 @@
 # Lab 1: Interac e-Transfer Support Agent with RAG and a Limits/Fees Tool (~50 min)
 
+> **In this lab** you'll build a complete Interac e-Transfer support agent from scratch in watsonx Orchestrate — no code required. You'll give it a RAG knowledge base over an e-Transfer support guide so it can answer policy, how-to, and security questions, then add a custom no-code tool that calculates sending limits, fees, and delivery times by account tier. Finally you'll deploy it and read the live monitoring dashboard. **By the end, you'll know how to stand up an agent that both retrieves answers and executes real logic — and how to watch its adoption, cost, quality, and safety once it's in production.**
+
 > **Interac watsonx Enablement Workshop.** Scenarios, personas, and data in this lab are fictional and for demonstration only.
 
-> **About the screenshots:** the images show the watsonx Orchestrate UI, which is what matters for each step. A few screenshots were captured from an earlier build, so the agent, knowledge-base, or tool name shown in an image may differ from the text — **follow the text**, not the labels in the images.
-
-> **Instructor has pre-provisioned:** the files below are available to participants, and everyone has watsonx Orchestrate access. The custom tool is built **inside** watsonx Orchestrate as a no-code Agentic workflow — there is **nothing to host or deploy**.
 
 ## Table of Contents
 - [Architecture](#architecture)
