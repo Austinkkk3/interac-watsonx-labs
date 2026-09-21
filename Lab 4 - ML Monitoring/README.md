@@ -35,10 +35,9 @@ Interac processes very high e-Transfer volumes nationwide, so accurate **transac
 
 ### Step 1: Create project + deployment space
 
-1. Go to [watsonx.ai](https://dataplatform.cloud.ibm.com/wx/home?context=wx); confirm the **correct account and region**.
+1. Go to [watsonx.ai]
+   <img width="1358" height="792" alt="image" src="https://github.com/user-attachments/assets/559f6169-8acb-41cc-bc77-7b7a8d540194" />
 
-   ![IBM Cloud login](images/image2.png)
-   ![IBM Cloud region](images/image3.png)
 
 2. **☰ Menu → Projects → New project**, name it `interac-ai-gov`.
 
