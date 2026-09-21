@@ -5,6 +5,8 @@
 <!-- 📸 Screenshot placeholder — hero image (unchanged from previous version) -->
 <img alt="AskHR" src="assets/hr_landscape.jpg">
 
+> **In this lab** you'll step into IBM OpenPages and experience AI governance as a team sport, playing the first two roles in the lifecycle. As the **Use Case Owner** you'll create a governed model use case, set up the business-entity hierarchy, complete risk and compliance assessments, and review the resulting risks; as the **Business Unit Leader** you'll give the final approval that activates it. **By the end, you'll understand how an enterprise tracks who owns each AI model, whether it's compliant, and who signed off — the system-of-record backbone of responsible AI at a regulated organization.** *(The remaining roles — Model Developer, Validator, AIOps, and Operations — are covered instructor-led in the separate IBM environment.)*
+
 ## You need a separate Lab environment from IBM. Please refer to the document provided by IBMers.
 
 > ℹ️ **This lab was rewritten for the new IBM OpenPages (Governance Console) UI.** The navigation, buttons, and workflow steps below reflect the current interface. Where the new UI differs from the older version, a **🔀 What changed** note calls it out so returning users can find the new location quickly.
