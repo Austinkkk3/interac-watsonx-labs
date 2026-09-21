@@ -57,6 +57,8 @@ This demonstrates knowledge-base integration, building a tool with the **no-code
    <img width="600" height="600" alt="image" src="https://github.com/user-attachments/assets/b622e445-6d12-447a-8270-16b0aa06dbab" />
 
 3. **Resource list** → **AI / Machine Learning** → **watsonx Orchestrate** → **Launch watsonx Orchestrate**.
+   <img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/74cfe2cc-d210-4961-91f0-e888b285dedd" />
+
 4. Click the hamburger menu (☰) and select **Build**.
 
    <img width="1000" alt="Build menu" src="images/pic6.png">
