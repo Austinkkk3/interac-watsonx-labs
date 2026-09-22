@@ -145,14 +145,21 @@ Instead of hosting an external service, we build the limits/fees logic as a **no
 
 #### 3.2 Define the inputs
 Click **0 inputs** at the top of the flow, then click **Add** for each parameter (the agent fills these from the customer's question):
-<img width="1423" height="816" alt="4" src="https://github.com/user-attachments/assets/1d0f82d8-3e43-4ae7-a0ee-2474eceddc02" />
 
-| Input | Type |
-|-------|------|
-| `transfer_type` | String |
-| `amount` | Decimal |
-| `account_tier` | String |
-| `recipient_has_autodeposit` | Boolean |
+<img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/c733b358-aff7-4ae1-b39b-f83c4f3f9b81" />
+
+
+| Input | Type | Required | Default |
+|-------|------|----------|---------|
+| `account_tier` | String | **On** | — |
+| `amount` | Decimal | Off | `0` |
+
+<img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/a3d8f1bb-664f-4918-97b3-6e20cd972d57" />
+
+<img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/125da5fd-6493-4fca-87a5-f183f77801d2" />
+
+
+> **Number-typed defaults:** for `amount`, the default must be the number `0` — a numeric input rejects an empty-string default.
 
 > If the canvas started with a **Text extractor** node, delete it (we don't process documents) — select it and click the trash icon.
 
@@ -162,149 +169,123 @@ From **Flow nodes → Logic block**, drop a **Logic block** between the start an
 <img width="1423" height="816" alt="5" src="https://github.com/user-attachments/assets/bb98731c-ceb5-4351-bfa6-b6faa574e48f" />
 
 ```python
-# Interac e-Transfer limits / fees / delivery — illustrative sample values for the demo
+# Interac e-Transfer limits / fees — illustrative sample values for the demo.
+# Per-transaction limits and fees match the Support Knowledge Base guide.
 tiers = {
-    "personal basic":   {"limit": 3000,  "fee": 0.00},
-    "personal premium": {"limit": 5000,  "fee": 0.00},
-    "small business":   {"limit": 25000, "fee": 1.50},
+    "personal basic":   {"limit": 3000,  "limit_txt": "$3,000",  "fee_txt": "$0.00"},
+    "personal premium": {"limit": 5000,  "limit_txt": "$5,000",  "fee_txt": "$0.00"},
+    "small business":   {"limit": 25000, "limit_txt": "$25,000", "fee_txt": "$1.50"},
 }
 
 # Read the inputs (watsonx Orchestrate exposes them on `self`)
 try:
-    raw_account_tier = self.account_tier
+    raw_tier = self.account_tier
 except AttributeError:
-    raw_account_tier = ""
-try:
-    raw_transfer_type = self.transfer_type
-except AttributeError:
-    raw_transfer_type = ""
+    raw_tier = ""
 try:
     raw_amount = self.amount
 except AttributeError:
-    raw_amount = 0
-try:
-    raw_autodeposit = self.recipient_has_autodeposit
-except AttributeError:
-    raw_autodeposit = False
+    raw_amount = None
 
 # Normalize
-tier = (raw_account_tier or "").strip().lower()
-ttype = (raw_transfer_type or "").strip().lower()
-if raw_amount is None:
-    amount = 0
-else:
-    try:
-        amount = float(raw_amount)
-    except (ValueError, TypeError):
-        amount = 0
-recipient_has_autodeposit = bool(raw_autodeposit) if raw_autodeposit is not None else False
+tier = (raw_tier or "").strip().lower()
+try:
+    amt = float(raw_amount)
+except (ValueError, TypeError):
+    amt = None
+if amt is not None and amt <= 0:
+    amt = None
 
-info = tiers.get(tier, {"limit": 0, "fee": 0.00})
-per_transaction_limit = info["limit"]
-
-# Requesting money is always free; otherwise use the tier's send fee
-fee = 0.00 if ttype == "request money" else info["fee"]
-
-# Within the per-transaction limit?
-within_limit = amount <= per_transaction_limit
-
-# Estimated delivery (Interac e-Transfers are near-instant)
-if recipient_has_autodeposit:
-    estimated_delivery = "Within seconds (Autodeposit)."
-elif ttype == "request money":
-    estimated_delivery = "Sent immediately; funds arrive after the other party approves."
-else:
-    estimated_delivery = "Typically within 30 minutes after the recipient accepts and answers the security question."
-
-# Human-readable summary the agent can present directly
-tier_label = tier.title() if tier in tiers else (raw_account_tier or "your account")
-fee_text = "no fee" if fee == 0 else f"a ${fee:,.2f} fee"
+# Build the reply
 if tier not in tiers:
-    summary = (f"I don't recognize the account tier '{raw_account_tier}'. "
-               f"Valid tiers are: Personal Basic, Personal Premium, or Small Business.")
-elif within_limit:
-    summary = (f"Yes - a ${amount:,.0f} transfer is within your {tier_label} "
-               f"per-transaction limit of ${per_transaction_limit:,.0f}, with {fee_text}. "
-               f"Estimated delivery: {estimated_delivery}")
+    answer = "I can help with limits and fees. Which account tier are you on - Personal Basic, Personal Premium, or Small Business?"
 else:
-    summary = (f"A ${amount:,.0f} transfer exceeds your {tier_label} per-transaction limit "
-               f"of ${per_transaction_limit:,.0f}. You could split it into smaller transfers "
-               f"or move to a higher tier. If it were within limit, the fee would be {fee_text}.")
+    info = tiers[tier]
+    tier_name = tier.title()
+    answer = ("Here are the e-Transfer limits and fees for a " + tier_name + " account:"
+               + "\n- Per-transfer sending limit: " + info["limit_txt"]
+               + "\n- Fee per transfer: " + info["fee_txt"])
+    if amt is not None:
+        amt_txt = "$" + str(int(round(amt)))
+        if amt <= info["limit"]:
+            answer = answer + "\n\nYour " + amt_txt + " transfer is within the limit, and the fee would be " + info["fee_txt"] + "."
+        else:
+            answer = answer + "\n\nYour " + amt_txt + " transfer is above the " + info["limit_txt"] + " per-transfer limit, so it would be declined. Try sending it in smaller amounts."
 
-# Do NOT add a `return` statement. watsonx Orchestrate Logic blocks capture the
-# output variables you declare in the Outputs tab by name (within_limit,
-# per_transaction_limit, fee, estimated_delivery, summary). A `return` here
-# throws "SyntaxError: 'return' outside function".
+# IMPORTANT: assign the result to self.<output name>. The Logic block does NOT
+# auto-capture bare local variables — you must write self.answer.
+self.answer = answer
 ```
 
-> ⚠️ **No `return` statement.** The Logic block is not a function — it captures the output variables by name. Adding `return {...}` fails with `SyntaxError: 'return' outside function`.
+> ⚠️ **Two rules for outputs.** (1) **No `return` statement** — the Logic block is not a function; `return {...}` fails with `SyntaxError: 'return' outside function`. (2) **Write outputs to `self.<name>`, not a bare variable.** The Outputs tab shows each output's **Python Id** (e.g. `self.answer`); the code must assign to exactly that (`self.answer = ...`), or the output comes back empty.
+>
+> Also avoid `.format()` and f-string format specs in the sandbox — build strings with plain concatenation as shown.
 
 #### 3.4 Define the outputs
-In the Logic block's **Outputs** tab, add these outputs — the names must match the keys in the code above:
+In the Logic block's **Outputs** tab, add a single output — the name must match what the code assigns to `self.` :
 
 <img width="1320" height="816" alt="6" src="https://github.com/user-attachments/assets/89fb0036-6d7f-44ec-ab8e-1d1df523dbcf" />
 
+<img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/fd053489-861f-4bca-a6f8-5b1c4f32a2ee" />
+
+
 | Output | Type |
 |--------|------|
-| `within_limit` | Boolean |
-| `per_transaction_limit` | Integer |
-| `fee` | Decimal |
-| `estimated_delivery` | String |
-| `summary` | String |
+| `answer` | String |
 
-#### 3.5 Save and test
+> A single plain-text output that the agent relays verbatim is far more reliable than multiple structured fields the model has to reassemble into a sentence or table.
+
+#### 3.5 Map the flow output (End node)
+Click the **1 output** node at the bottom of the flow to open **Edit Data Mapping'**. On the `answer` row, click the **`{x}`** (variable) icon → choose **Logic block 1 → answer**.
+<img width="1396" height="813" alt="image" src="https://github.com/user-attachments/assets/afc4eff6-def1-4b79-a480-39d06f6add68" />
+
+
+> Bind it explicitly with `{x}`. Do **not** leave it on **Auto-map** and do **not** type a literal value with `abc` — either one sends the wrong thing (or nothing) to the agent.
+
+<!-- add screenshot: End node output mapped to Logic block 1 → answer -->
+
+#### 3.6 Turn on Agent summarization
+Click the **gear icon (Flow settings)** at the top of the flow canvas and turn **Agent summarization** **On**.
+
+<img width="2792" height="1626" alt="image" src="https://github.com/user-attachments/assets/5004ad51-39ab-4321-9666-4b02f61bcbae" />
+
+
+> This is required. With it **off**, the agent only receives an async run handle (`async_flag: true`) and replies with `{}` or an invented answer. With it **on**, the agent receives the flow's `answer` and uses it.
+
+<!-- add screenshot: Flow settings panel with Agent summarization = On -->
+
+#### 3.7 Save and test
 1. Click **Done** (top right) to save the workflow. It appears in the agent's **Toolset** as `eTransfer Limits & Fees` (if it isn't there, add it via **Tools → Add tool → Local instance**).
-2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, ask e.g. *"I have a Personal Basic account, can I send $2,500 in one e-Transfer, and is there a fee?"* and confirm the agent calls the tool and returns the correct limit/fee.<img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
+2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, run these three to confirm limits, fees, and the over-limit case all come back correct:
+   - *"I'm on a Small Business account — can I send $20,000, and what's the fee?"* → within limit, fee **$1.50**
+   - *"I have a Personal Premium account, can I send $8,000?"* → exceeds the **$5,000** per-transaction limit
+   - *"Can I send $4,000 on a Personal Premium account?"* → within limit, **$0.00** fee
 
+<img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
 
-> The exact node names in the flow builder can vary by version — use the **Decision/branch** steps for the tier logic and a final **response / set-output** step. Confirm labels in your environment.
+> The exact node names in the flow builder can vary by version — confirm labels in your environment.
 
-#### 3.6 Configure Agent Behavior
+#### 3.8 Configure Agent Behavior
 Scroll to the **Behavior** section and add these instructions:
 
-   <img width="1470" height="827" alt="Screenshot 2026-09-16 at 4 01 16 PM" src="https://github.com/user-attachments/assets/eb73f822-1336-454f-8ea6-319ea9890ca7" />
+<img width="1470" height="827" alt="Screenshot 2026-09-16 at 4 01 16 PM" src="https://github.com/user-attachments/assets/eb73f822-1336-454f-8ea6-319ea9890ca7" />
 
+```
+You are an Interac e-Transfer support assistant. Operate only within the Interac e-Transfer domain. Be clear, concise, and friendly.
 
+1) e-Transfer Information & Knowledge Base
+For how e-Transfer works — sending, requesting, or receiving money, Autodeposit, security, or troubleshooting — answer from the eTransfer-knowledge knowledge base. Use it ONLY for how-it-works, policy, security, and troubleshooting — never for specific limit amounts or fees.
 
+2) Limits & Fees (Tool)
+When a customer asks whether a transfer is allowed, how much it costs, or their sending limit, you MUST call the "eTransfer Limits & Fees" tool — never quote a limit or fee from the knowledge base or from memory. Extract account_tier (Personal Basic / Personal Premium / Small Business) and amount from the message; if the account tier is missing, ask for it before calling the tool.
+Reply with the EXACT text of the tool's `answer` field, word for word — do not summarize, rephrase, round, or drop anything.
+CRITICAL: never change, remove, or invent any dollar amount. Never say "no fee", "free", or "$0" unless the answer text literally contains "$0.00".
 
-
-
-
-
-   ```
-You are an Interac e-Transfer support assistant. You operate exclusively within the Interac e-Transfer domain. Be clear, concise, and friendly.
-
-1. e-Transfer Information & Knowledge Base
-For how e-Transfer works — sending, requesting, or receiving money, how Autodeposit works, security, or troubleshooting — retrieve answers from the eTransfer-knowledge knowledge base. Use it ONLY for how-it-works, policy, security, and troubleshooting — never for specific limit amounts, fees, or delivery times.
-
-2. Limits, Fees, and Delivery (Tool)
-When a customer asks whether a transfer is allowed, how much it costs, or how long it takes, you MUST use the "eTransfer Limits & Fees" workflow — never quote a limit, fee, or delivery time from the knowledge base or from memory. Call it with:
-- transfer_type: "send money", "request money", or "autodeposit"
-- amount: transfer amount in CAD
-- account_tier: "personal basic", "personal premium", or "small business"
-- recipient_has_autodeposit: yes or no (optional; default no)
-If the account tier or amount is missing, ask for it before calling the tool.
-
-Presenting the result — NEVER show the raw JSON the tool returns. Turn it into a friendly reply: one sentence answering the question, then a compact markdown table. Example, for a $4,000 Small Business send that returns within_limit=true, per_transaction_limit=25000, fee=1.50, estimated_delivery="Typically within 30 minutes":
-
-Yes — a $4,000 e-Transfer is within your Small Business limit.
-
-| Detail | Value |
-|---|---|
-| Amount | $4,000 CAD |
-| Account tier | Small Business |
-| Within limit? | Yes (limit $25,000 per transaction) |
-| Fee | $1.50 |
-| Estimated delivery | Typically within 30 minutes |
-
-If within_limit is false, say so clearly and suggest splitting the transfer or upgrading the tier.
-
-3. Fraud Awareness
+3) Fraud Awareness
 If a customer is asked to send an e-Transfer to "verify", "protect", or "move" their money, warn them it's a common scam, tell them not to send it, and to contact their financial institution. Never encourage sending money to unknown recipients.
 
 Standards: all amounts in CAD; only answer within the Interac e-Transfer domain; if out of scope, politely say so.
 ```
-
 
 ### Part 4: Production Agent Monitoring
 
