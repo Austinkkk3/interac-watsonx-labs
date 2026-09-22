@@ -72,6 +72,7 @@ First, go back to your project (Step 1 left you in a deployment space): ☰ Menu
    ![New asset](images/5.png)
    ![Notebook editor](images/5.1.png)
    ![Browse local file](images/6.png)
+   Select **demand_forecasting_clean_1_5.ipynb**
    ![Upload notebook](images/6.1.png)
    ![Create](images/7.png)
 
