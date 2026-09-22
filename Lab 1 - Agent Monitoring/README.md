@@ -257,9 +257,11 @@ Click the **gear icon (Flow settings)** at the top of the flow canvas and turn *
 #### 3.7 Save and test
 1. Click **Done** (top right) to save the workflow. It appears in the agent's **Toolset** as `eTransfer Limits & Fees` (if it isn't there, add it via **Tools → Add tool → Local instance**).
 2. Flows can't be previewed on their own — test from the agent. In the agent's **chat preview**, run these three to confirm limits, fees, and the over-limit case all come back correct:
+  
+ >(Please keep in mind that the LLM in this sandbox is just a lighter, older model, so it might occasionally make minor errors. For production deployment, you have full flexibility to choose top-tier models to guarantee accuracy and performance）
+
    - *"I'm on a Small Business account — can I send $20,000, and what's the fee?"* → within limit, fee **$1.50**
-   - *"I have a Personal Premium account, can I send $8,000?"* → exceeds the **$5,000** per-transaction limit
-   - *"Can I send $4,000 on a Personal Premium account?"* → within limit, **$0.00** fee
+ 
 
 <img width="426" height="364" alt="Screenshot 2026-09-08 at 10 51 31 PM" src="https://github.com/user-attachments/assets/f8e1d78d-ec4b-412a-bbec-b2d1638515da" />
 
