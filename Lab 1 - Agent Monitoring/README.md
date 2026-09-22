@@ -321,9 +321,6 @@ Standards: all amounts in CAD; only answer within the Interac e-Transfer domain;
    ```
    What is the per-transaction sending limit for a Personal Basic account?
    ```
-   ```
-   I have a Personal Premium account and want to send $8,000 in one transfer. Is that allowed?
-   ```
 
 #### 4.2 View the monitoring dashboard
 After deploying and asking a few questions, click the **watsonx Orchestrate** logo (top-left) to return to the home page. You now land on a monitoring dashboard that summarizes every agent you've deployed.
