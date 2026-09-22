@@ -72,7 +72,11 @@ A simple, structured process for managing AI models from idea to remediation.
 
 ## 🚀 Getting Started
 
-1. Login to the OpenPages Link IBMers provided
+1. Login to the OpenPages Link IBMers provided: http://na4.services.cloud.techzone.ibm.com:40923/openpages/
+
+Username: OpenPagesAdministrator
+
+Password: OpenPagesAdministrator
 
 > [!IMPORTANT]
 > After logging in, open the **User menu** (the person icon at the top-right of the OpenPages banner) and confirm your active profile.
