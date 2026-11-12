@@ -15,9 +15,9 @@ A hands-on workshop for exploring **IBM watsonx** agent building, evaluation, mo
 
 | # | Lab | What you'll do | Environment |
 |---|-----|----------------|-------------|
-| 1 | [WXO Agent Monitoring](Lab%201%20-%20WXO%20Agent%20Monitoring/README.md) | Build an Interac e-Transfer Support Agent with RAG + a custom limits/fees tool, then evaluate and monitor it | watsonx Orchestrate + watsonx.governance |
+| 1 | [WXO Agent Monitoring](Lab%201%20-%20Agent%20Monitoring/README.md) | Build an Interac e-Transfer Support Agent with RAG + a custom limits/fees tool, then evaluate and monitor it | watsonx Orchestrate + watsonx.governance |
 | 2 | [LLM Monitoring](Lab%202%20-%20LLM%20Monitoring/README.md) | Import a project, deploy a prompt, and run prompt evaluations (ROUGE, BLEU) with AI Factsheets | watsonx.ai + watsonx.governance |
-| 3 | [AI Governance with OpenPages](Lab%203%20-%20AI%20Governance%20with%20OpenPages/README.md) | Run a multi-persona AI governance workflow (model owner, validator, RCO, developer) | watsonx.governance + OpenPages |
+| 3 | [AI Governance with OpenPages](Lab%203%20-%20AI%20GRC/README%20(3).md) | Run a multi-persona AI governance workflow (model owner, validator, RCO, developer) | watsonx.governance + OpenPages |
 | 4 | [ML Monitoring](Lab%204%20-%20ML%20Monitoring/README.md) | Deploy an ML demand-forecasting model and configure Watson OpenScale evaluations (quality, drift, explainability) | watsonx.ai + Watson OpenScale |
 
 Each lab folder contains its own step-by-step `README.md` and any data or instructor assets it needs.
